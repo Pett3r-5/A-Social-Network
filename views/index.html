@@ -1,0 +1,79 @@
+<DOCTYPE! html>
+<html>
+    <head>
+        <title>Login</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> <!--tag de responsividade do bootstrap-->
+        <script src="https://code.jquery.com/jquery-3.3.1.js"></script><!--importa jquery-->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> <!--importa css do bootstrap, para que ele possa ser modificado-->
+        <link href="../index.css" rel="stylesheet"/> <!--importa o css próprio, que adiciona em cima do css do bootstrap-->
+        <script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
+        <script>
+             $(document).ready(function() {
+               var url = location.protocol + '//' + location.hostname + ':' + location.port
+               // $('#signup').attr('href', url+'/signup')
+                $('#botaoForm').hover(function(){
+                    $('#botaoForm').fadeIn("slow");
+                    $('#emoji').fadeIn(3000);
+                    $('[data-toggle="popover"]').popover();
+                });
+                $("#botaoForm").submit(function(event) {
+	                 $('#loading').css('display', 'block')
+                })
+            });
+
+        </script>
+
+    </head>
+    <body>
+        <div class="container" id="loginDiv">
+            <img src="emojiHi.png" class="img-fluid" id="emoji" data-toggle="popover" data-content="Hi! Welcome"/>
+            <form id="formLogin" method="post" action="http://192.168.200.85:3001/" target="">
+  <div class="form-group">
+    <label for="exampleInputEmail1">Usuário</label>
+    <input name="username" class="form-control" style="box-shadow: 1px 1px 3px #888888 ;" required>
+    <small id="emailHelp" class="form-text text-muted">Tente logar com o usuário: teste1</small>
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Senha</label>
+    <input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="" style="box-shadow: 1px 1px 3px #888888 ;" required>
+      <small id="emailHelp" class="form-text text-muted">Tente logar com a senha: 123456</small>
+  </div>
+  <button type="submit" id="botaoForm" class="btn btn-lg">Login</button>
+  <img id="loading" src="../ajax-loader.gif" style="display: none; margin-left: auto;  margin-right: auto; margin-top: 3%; width: 3%" />
+</form>
+            <a id="signup" data-toggle="modal" data-target="#exampleModal" href="_blank"><p id="crie">Ou então crie uma conta!</p></a>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel" style="color: rgb(234, 147, 255)">Sign up</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form id="formLoginModal" method="post" action="http://192.168.200.85:3000/home">
+      <div class="form-group">
+        <p>Criar conta:</p>
+        <label for="exampleInputEmail1" style="color: gray">E-mail</label>
+        <input type="email" class="form-control" id="exampleInputTextModal" aria-describedby="emailHelp" name="email_cadastro" placeholder="" style="box-shadow: 1px 1px 3px #888888 ;" required>
+        <label for="exampleInputEmail1" style="margin-top: 7%; color: gray">Usuário</label>
+        <input type="text" class="form-control" id="exampleInputTextModal2" aria-describedby="emailHelp" placeholder="" name="user_cadastro" style="box-shadow: 1px 1px 3px #888888 ;" required>
+        <label for="exampleInputPassword1" style="margin-top: 5%; color: gray">Senha</label>
+        <input type="password" class="form-control" id="exampleInputPassword1Modal" placeholder="" name="senha_cadastro" style="box-shadow: 1px 1px 3px #888888 ;" required>
+        <input type="file" name="fileToUpload" id="fileToUpload">
+        <input type="submit" value="Upload Image" name="submit">
+      </div>
+      <button type="submit" id="botaoFormModal" class="btn btn-lg" style="width:100%; margin-top: 20%; margin-bottom: 10%;">criar</button>
+    </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>   <!--importa bootstrap-->
+    </body>
+</html>
