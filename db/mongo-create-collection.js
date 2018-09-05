@@ -1,7 +1,7 @@
 const mongoClient = require('mongodb').MongoClient
 const bcrypt = require('bcryptjs')
 
-mongoClient.connect('mongodb://localhost:2707/User', { useNewUrlParser: true }, (err, client) => {
+mongoClient.connect('mongodb://localhost:27017/User', { useNewUrlParser: true }, (err, client) => {
   if (err) { console.log(err) }
   const db = client.db('User');
   bcrypt.genSalt(10, (err, salt) => {

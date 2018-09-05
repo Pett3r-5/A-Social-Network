@@ -8,7 +8,7 @@ const session = require('express-session')
 const path = require('path')
 const app = express()
 const formidable = require('formidable')
-const mongoClient = require('mongodb').mongoClient
+const mongoClient = require('mongodb').MongoClient
 
 const LocalStrategy = require('passport-local').Strategy
 
@@ -28,40 +28,48 @@ let user = {nome: '', id: '', imagem: '', authToken: ''}
 
 passport.use(new LocalStrategy( // o filtro de buscar o usuario no banco de dados.
   function (username, password, done) {
-    mongoClient.connect('mongodb://localhost:2707/User', { userNewUrlParser: true }, (err, client) => {
+    mongoClient.connect('mongodb://localhost:27017/User', { useNewUrlParser: true }, (err, client) => {
       if (err) console.log(`Não conseguiu se conectar ao servidor mongo: ${err}`)
 
       const db = client.db('User')
       db.collection('User').findOne({nome: username}).then((docs) => {
-        console.log(docs)
-        bcrypt.compare(password, result[0].password, (err, resul) => {
-          if (err) {
-            console.log(err)
-          }
-          if (resul === false) {
-            client.close()
-            console.log('false')
-            return done(null, false)
-          } else {
-            console.log('true')
-            user = docs
-            createCon.end()
-            return done(null, user)
-          }
+        console.log('print:' + docs)
+        if (docs === null) {
+          console.log('usuario nao achado' + err)
+          client.close()
+          return done(null, false)
+        } else {
+          bcrypt.compare(password, docs.password, (err, resul) => {
+            if (err) {
+              console.log(err)
+            }
+            if (resul === false) {
+              client.close()
+              console.log('false')
+              return done(null, false)
+            } else {
+              console.log('true')
+              user = docs
+              client.close()
+              return done(null, user)
+            }
+          })
+        }
+      }, (err) => {
+        console.log('usuario nao achado' + err)
+        client.close()
+        return done(null, false)
       })
-    }, (err) => {
-      console.log('usuario nao achado' + err);
-      return done(null, false)
     })
-  }
-))
+  })
+)
 
 passport.serializeUser(function (user, done) {
-  done(null, user.id)
+  done(null, user._id)
 })
 
 passport.deserializeUser(function (id, done) {
-  mongoClient.connect('mongodb://localhost:2707/User', { userNewUrlParser: true}, (err, client) => {
+  mongoClient.connect('mongodb://localhost:27017/User', { userNewUrlParser: true }, (err, client) => {
     if (err) console.log(`Não conseguiu se conectar ao servidor mongo: ${err}`)
     const db = client.db('User')
     db.collection('User').findOne({_id: id}).then((docs) => {
@@ -131,13 +139,22 @@ app.post('/home', (req, res) => {
       })
     })
     // cadastro.auth_token = jwt.sign(cadastro.user, 'galinha').toString()
-    mongoClient.connect('mongodb://localhost:2707/User', { userNewUrlParser: true}, (err, client) => {
+    mongoClient.connect('mongodb://localhost:27017/User', { useNewUrlParser: true }, (err, client) => {
       if (err) console.log(`Não conseguiu se conectar ao servidor mongo: ${err}`)
       const db = client.db('User')
-      db.collection('User').findOne({auth_token: cadastro.auth_token}).then((docs) => {
-        res.send('usuario já cadastrado')
-        client.close()
-      }, (err) => { db.collection('User').insertOne({nome: cadastro.user, email: cadastro.email, password: cadastro.password, auth_token: cadastro.auth_token, imagem: cadastro.imagem}).then(() => { client.close() })})
+      db.collection('User').findOne({nome: cadastro.user}).then((docs) => {
+        console.log('docos: ' + docs)
+        if (docs === null) {
+          db.collection('User').insertOne({nome: cadastro.user, email: cadastro.email, password: cadastro.password, auth_token: cadastro.auth_token, imagem: cadastro.imagem}).then((docs) => {
+            console.log('entrou ' + docs)
+            client.close()
+            res.redirect(`/`)
+          }, (err) => console.log('unable', err))
+        } else {
+          res.send('usuario já cadastrado')
+          client.close()
+        }
+      })
     })
   }
 })
