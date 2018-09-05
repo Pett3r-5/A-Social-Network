@@ -81,7 +81,7 @@ body{
 
 @font-face {
     font-family: Kozuka light;
-    src: url("KozGoPr6N-ExtraLight.otf");
+    src: url("../fonts/KozGoPr6N-ExtraLight.otf");
 }
 
 .modal-body {

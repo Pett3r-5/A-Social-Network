@@ -28,39 +28,30 @@ let user = {nome: '', id: '', imagem: '', authToken: ''}
 
 passport.use(new LocalStrategy( // o filtro de buscar o usuario no banco de dados.
   function (username, password, done) {
-    mongoClient.connect('mongodb://localhost:2707/User', { useNewUrlParser: true }, (err, client) => {
+    mongoClient.connect('mongodb://localhost:2707/User', { userNewUrlParser: true }, (err, client) => {
       if (err) console.log(`Não conseguiu se conectar ao servidor mongo: ${err}`)
 
       const db = client.db('User')
-      db.collection('User').findOne({username})
-      client.close()
-    })
-    createCon.query('SELECT * FROM first.User WHERE nome = ?', [username], (err, result) => {
-      if (err) {
-        console.log(err)
-      }
-      console.log(result[0])
-      if (result.length !== 0) {
+      db.collection('User').findOne({nome: username}).then((docs) => {
+        console.log(docs)
         bcrypt.compare(password, result[0].password, (err, resul) => {
           if (err) {
             console.log(err)
           }
           if (resul === false) {
-            createCon.end()
+            client.close()
             console.log('false')
             return done(null, false)
           } else {
             console.log('true')
-            user = result[0]
+            user = docs
             createCon.end()
             return done(null, user)
           }
-        })
-      } else {
-        createCon.end()
-        console.log('veio aqui tambem')
-        return done(null, false)
-      }
+      })
+    }, (err) => {
+      console.log('usuario nao achado' + err);
+      return done(null, false)
     })
   }
 ))
@@ -70,19 +61,14 @@ passport.serializeUser(function (user, done) {
 })
 
 passport.deserializeUser(function (id, done) {
-  let createCon = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'spot',
-    database: 'first'
-  })
-  createCon.query('SELECT * FROM first.id WHERE first.id = ?', [id], (err, result) => {
-    if (err) {
-      console.log(err)
-    }
-    createCon.end()
-    user = result[0]
-    done(err, user)
+  mongoClient.connect('mongodb://localhost:2707/User', { userNewUrlParser: true}, (err, client) => {
+    if (err) console.log(`Não conseguiu se conectar ao servidor mongo: ${err}`)
+    const db = client.db('User')
+    db.collection('User').findOne({_id: id}).then((docs) => {
+      user = docs
+      client.close()
+      done(err, user)
+    })
   })
 })
 
@@ -119,12 +105,6 @@ app.get('/config:id', passport.authenticate('local', { successRedirect: `/config
 })
 
 app.post('/home', (req, res) => {
-  let createCon = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'spot',
-    database: 'first'
-  })
   console.log('entrou')
   console.log('body: ' + JSON.stringify(req.body, undefined, 4))
   // console.log('userCadastro: ' + JSON.parse(req, undefined, 4))
@@ -151,21 +131,13 @@ app.post('/home', (req, res) => {
       })
     })
     // cadastro.auth_token = jwt.sign(cadastro.user, 'galinha').toString()
-    createCon.query('SELECT auth_token FROM first.User WHERE auth_token = ?', [cadastro.auth_token], (err, result) => {
-      if (err) {
-        console.log(err)
-      }
-      if (result.length === 0) {
-        createCon.query('INSERT INTO User(nome,email,password,auth_token, imagem) VALUES (?,?,?,?) ', [cadastro.user, cadastro.email, cadastro.password, cadastro.auth_token, cadastro.imagem], (err, result) => {
-          if (err) {
-            console.log(err)
-          }
-          createCon.end()
-        })
-      } else {
+    mongoClient.connect('mongodb://localhost:2707/User', { userNewUrlParser: true}, (err, client) => {
+      if (err) console.log(`Não conseguiu se conectar ao servidor mongo: ${err}`)
+      const db = client.db('User')
+      db.collection('User').findOne({auth_token: cadastro.auth_token}).then((docs) => {
         res.send('usuario já cadastrado')
-        createCon.end()
-      }
+        client.close()
+      }, (err) => { db.collection('User').insertOne({nome: cadastro.user, email: cadastro.email, password: cadastro.password, auth_token: cadastro.auth_token, imagem: cadastro.imagem}).then(() => { client.close() })})
     })
   }
 })
