@@ -7,7 +7,7 @@ $(document).ready(function () {
   }
 // background-image: url('../avatar.jpg');
   $('html').on('click', function(e) {
-  if (typeof $(e.target).data('original-title') == 'undefined' && !$(e.target).parents().is('.popover.in')) {
+  if (typeof $(e.target).data('original-title') === 'undefined' && !$(e.target).parents().is('.popover.in')) {
     $('[data-original-title]').popover('hide');
   }
 });

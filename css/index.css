@@ -43,7 +43,7 @@ body{
     font-family: Kozuka light;
 }
 
-#botaoForm{
+.botaoForm{
     background-color: rgb(230, 240, 240);
     box-shadow: 1px 1px 1px #888888 ;
     color: rgb(10, 50, 100);
@@ -54,11 +54,11 @@ body{
     width: 50%;
 }
 
-#botaoForm:hover{
+.botaoForm:hover{
     background-color: rgb(200, 240, 240);
 }
 
-#botaoForm:active{
+.botaoForm:active{
     box-shadow: 1px 1px 5px #888888 inset;
     background-color: rgb(210, 290, 210);
     color: rgb(0, 0, 0);
