@@ -99,9 +99,18 @@ app.post('/', passport.authenticate('local', { failureRedirect: '/nada', failure
 }) // aqui passport.authenticate eh um middleware, entao depois ainda pode ter o (req,res) => {}
 
 app.get('/home:id', (req, res) => {
-  let nome = {nome: user.nome}
-  console.log(nome)
-  res.render(path.join(__dirname, '/views/home.hbs'), nome)
+  let usuario = {nome: user.nome, imagem: '', amigos: '', posts: ''}
+  mongoClient.connect('mongodb://localhost:27017/User', { useNewUrlParser: true }, (err, client) => {
+    if (err) console.log(err)
+    const db = client.db('User')
+    db.collection('User').findOne({nome: usuario.nome}).then((docs) => {
+      console.log(docs)
+      usuario.imagem = docs.imagem
+      usuario.amigos = docs.amigos_id
+      usuario.posts = docs.posts
+      res.render(path.join(__dirname, '/views/home.hbs'), usuario)
+    })
+  })
 }) // aqui passport eh um middleware, entao depois ainda pode ter o (req,res) =>
 
 app.get('/', (req, res) => {
@@ -145,7 +154,7 @@ app.post('/home', (req, res) => {
       db.collection('User').findOne({nome: cadastro.user}).then((docs) => {
         console.log('docos: ' + docs)
         if (docs === null) {
-          db.collection('User').insertOne({nome: cadastro.user, email: cadastro.email, password: cadastro.password, auth_token: cadastro.auth_token, imagem: cadastro.imagem}).then((docs) => {
+          db.collection('User').insertOne({nome: cadastro.user, email: cadastro.email, password: cadastro.password, auth_token: cadastro.auth_token, imagem: './user_images/avatar.jpg', amigos_id: [], posts: []}).then((docs) => {
             console.log('entrou ' + docs)
             client.close()
             res.redirect(`/`)

@@ -71,7 +71,7 @@
   height: 99%;
   width: 99%;
   border-radius: 50%;
-  background-image: url('../avatar.jpg');
+  /* background-image: url('../avatar.jpg'); */
   background-size: 109%;
   /* margin-left: 4%; */
 }
@@ -81,7 +81,7 @@
   width: 400%;
   border-radius: 50%;
   box-shadow: 3px 1px 3px #111111;
-  background-image: url('../avatar.jpg');
+  /* background-image: url('../avatar.jpg'); */
   background-size: 100%;
   /* margin-left: 4%; */
 }

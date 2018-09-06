@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link href="../css/home.css" rel="stylesheet"/>
+    <link href="../src/css/home.css" rel="stylesheet"/>
     <script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
-    <script src="../home-script.js"></script>
+    <script src="../src/js/home-script.js"></script>
   </head>
   <body style="background-color: rgb(250,250,250); padding-top: 13%;">
     <nav class="navbar fixed-top navbar-expand-lg navbar-light" id="navbase">
@@ -15,7 +15,6 @@
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
@@ -24,20 +23,18 @@
           <li class="nav-item">
             <a class="nav-link" href="http://localhost:3001/config">Settings</a>
           </li>
-
         </ul>
-
-        <!-- <form class="form-inline my-2 my-lg-0">
+        <form class="form-inline my-2 my-lg-0" method="get" target="">
           <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="procura">Search</button>
-        </form> -->
+        </form>
       </div>
     </nav>
     <div class="container-fluid" style="padding-left: 5%; padding-right: 25%">
       <div class="row">
         <div class="col-sm"  style="max-width: 13%">
           <div id="perfilDois" style="height: 100px; width: 100px;">
-            <div class="blocos" id="photoPerfil"></div>
+            <div class="blocos" id="photoPerfil" style='background-image: url({{imagem}})'></div>
             <p style="text-align: center; margin-top: 7%; font-size: 120%;"><b>{{nome}}</b><div style="height: 1px; width:100px; background-color: lightgrey; margin-top: -5%"></div><p style="font-size: 90%; text-align: center; margin-top: 5%">Online<br><a href="http://pudim.com.br">Editar Perfil</a></p>
           </div>
         </div>
