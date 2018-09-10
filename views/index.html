@@ -10,15 +10,24 @@
         <script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
         <script>
              $(document).ready(function() {
-               var url = location.protocol + '//' + location.hostname + ':' + location.port
+               var url = location.protocol + '//' + location.hostname + ':' + location.port + '/'
+               console.log(url);
+               $("#formLogin").attr('action', url)
+               $("#formLoginModal").attr('action', url + 'home')
                // $('#signup').attr('href', url+'/signup')
                 $('#botaoForm').hover(function(){
                     $('#botaoForm').fadeIn("slow");
                     $('#emoji').fadeIn(3000);
                     $('[data-toggle="popover"]').popover();
                 });
-                $("#botaoForm").submit(function(event) {
-	                 $('#loading').css('display', 'block')
+                $("#botaoLogin").submit(function(event) {
+	                 $('#loading').css('display', 'block');
+                })
+
+                $('#botaoImagem').click(function(e){
+                  e.preventDefault()
+                  $('#inputUpload').trigger('click');
+                  $('#upImage').removeAttr('disabled');
                 })
             });
 
@@ -28,7 +37,7 @@
     <body>
         <div class="container" id="loginDiv">
             <img src="emojiHi.png" class="img-fluid" id="emoji" data-toggle="popover" data-content="Hi! Welcome"/>
-            <form id="formLogin" method="post" action="http://192.168.200.85:3001/" target="">
+            <form id="formLogin" method="post" target="">
               <div class="form-group">
                 <label for="exampleInputEmail1">Usuário</label>
                 <input name="username" class="form-control" style="box-shadow: 1px 1px 3px #888888 ;" required>
@@ -39,7 +48,7 @@
                 <input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="" style="box-shadow: 1px 1px 3px #888888 ;" required>
                   <small id="emailHelp" class="form-text text-muted">Tente logar com a senha: 12345</small>
               </div>
-              <button type="submit" class="botaoForm btn btn-lg">Login</button>
+              <button type="submit" id="botaoLogin" class="botaoForm btn btn-lg">Log-in</button>
               <img id="loading" src="../ajax-loader.gif" style="display: none; margin-left: auto;  margin-right: auto; margin-top: 3%; width: 3%" />
             </form>
             <a id="signup" data-toggle="modal" data-target="#exampleModal" href="_blank"><p id="crie">Ou então crie uma conta!</p></a>
@@ -56,18 +65,20 @@
                 </button>
               </div>
               <div class="modal-body">
-                <form id="formLoginModal" method="post" action="http://192.168.200.85:3001/home">
+                <form id="formLoginModal" method="post" encType="multipart/form-data">
       <div class="form-group">
-        <p>Criar conta:</p>
-        <label for="exampleInputEmail1" style="color: gray">E-mail</label>
+        <label for="exampleInputEmail1" style="color: gray">E-mail:</label>
         <input type="email" class="form-control" id="exampleInputTextModal" aria-describedby="emailHelp" name="email_cadastro" placeholder="" style="box-shadow: 1px 1px 3px #888888 ;" required>
-        <label for="exampleInputEmail1" style="margin-top: 7%; color: gray">Usuário</label>
+        <label for="exampleInputEmail1" style="margin-top: 5%; color: gray">Usuário:</label>
         <input type="text" class="form-control" id="exampleInputTextModal2" aria-describedby="emailHelp" placeholder="" name="user_cadastro" style="box-shadow: 1px 1px 3px #888888 ;" required>
-        <label for="exampleInputPassword1" style="margin-top: 5%; color: gray">Senha</label>
+        <label for="exampleInputPassword1" style="margin-top: 5%; color: gray">Senha:</label>
         <input type="password" class="form-control" id="exampleInputPassword1Modal" placeholder="" name="senha_cadastro" style="box-shadow: 1px 1px 3px #888888 ;" required>
-        <input type="file" name="fileToUpload" id="kaka" style="display: none;">
-        <label for='kk'>oi</label>
-        <input type="submit" value="Upload Image" name="imagem"  class="botaoForm" style="height: 40px; width: 80px;">
+        <input type="file" name="fileToUpload" id="inputUpload" style="display: none;">
+        <p  style="margin-top: 5%; color: gray">Avatar:</p>
+        <div class="row" style="margin-top: -5%">
+  <div class="col-md-6"><button class="btn" id="botaoImagem" style="height: 6%; width:80%; background-color: white !important;">Choose Image</button></div>
+  <!-- <div class="col-md-6" style="margin-left: -5%;"><input type="submit" value="Upload image" name="imagem" id="upImage" class="btn btn-lg botaoForm"  disabled style="height: 7%; width:100%;  font-size: 90%; background-color: white !important;"></div> -->
+</div>
       </div>
       <button type="submit" id="botaoFormModal" class="btn btn-lg botaoForm" style="width:100%; margin-top: 20%; margin-bottom: 10%;">criar</button>
     </form>

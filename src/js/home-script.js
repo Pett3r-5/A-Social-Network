@@ -42,4 +42,17 @@ $(document).ready(function () {
       }
     }
   })
+
+  $('#procura').change(function() {
+    var input = $('#procura').val()
+    console.log(inout)
+    $.ajax({
+      method 'GET',
+      url: url + '/search',
+      data: input
+
+    }).done(function() {
+      
+    })
+  })
 })
