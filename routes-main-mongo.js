@@ -217,8 +217,19 @@ app.get('/user:usuario', logadoOuNao, (req, res) => {
     db.collection('User').findOne({nome: usuario}).then((docs) => {
       console.log(docs)
       if (docs !== null) {
-        console.log('retorna usuario' + JSON.stringify(docs, undefined, 4))
-        res.render(path.join(__dirname, '/views/usuario.hbs'), docs)
+        db.collection('User').find({ $and: [ { amigos_id: {'$in': [docs._id]} }, { _id: {'$in': [docs.amigos_id]}}]}).toArray().then((docs2) => {
+          if (docs2 !== null) {
+            docs.amigosMutuos = docs2
+            console.log('retorna usuario doc2' + JSON.stringify(docs, undefined, 4))
+          }
+          db.collection('User').find({ $and: [ { amigos_id: {'$in': [docs._id]} }, { $not: {_id: {'$in': [docs.amigos_id]}}} ]}).toArray().then((docs3) => {
+            if (docs3 !== null) {
+              docs.amigosPendentes = docs3
+              console.log('retorna usuario doc3' + JSON.stringify(docs, undefined, 4))
+            }
+            res.render(path.join(__dirname, '/views/usuario.hbs'), docs)
+          }).catch((err) => console.log(err))
+        }).catch((err) => console.log(err))
       }
     }).catch((err) => console.log(err))
   })
@@ -230,8 +241,8 @@ app.post('/user:usuario', logadoOuNao, (req, res) => {
     const db = client.db('User')
     let usuario = req.params.usuario.substring(req.params.usuario.indexOf(':') + 1, req.params.usuario.length)
     db.collection('User').findOne({nome: usuario}).then((docs) => {
-      db.collection('User').findOneAndUpdate({_id: new ObjectID(req.user._id)}, {push: {amigos_id: docs._id}}).then((docs) => {
-        res.write('success')
+      db.collection('User').findOneAndUpdate({_id: new ObjectID(req.user._id)}, {$push: {amigos_id: docs._id}}).then((docs) => {
+        res.redirect(`/home:${req.user._id}`)
       }).catch((err) => console.log(err))
     })
   })
