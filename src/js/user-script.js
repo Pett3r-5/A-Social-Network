@@ -57,8 +57,9 @@ $(document).ready(function () {
       url: url + '/search',
       success: function (data) {
         console.log(data)
-        for (var i = 0; i < data.length; i++) {
-          data[i] = data[i].nome
+        if (!Array.isArray(data)) {
+          data = [data]
+          console.log(data)
         }
         $('#searching').autocomplete({
           source: data
@@ -70,4 +71,5 @@ $(document).ready(function () {
       }
     })
   }
+  // $('#home').attr('href', url + '/home:' + )
 })
