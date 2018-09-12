@@ -41,7 +41,9 @@
           <div id="perfilDois" style="height: 100px; width: 100px;">
             <div class="blocos" id="photoPerfil" style='background-image: url(./user_images/{{imagem}})'></div>
             <p style="text-align: center; margin-top: 7%; font-size: 120%;"><b>{{nome}}</b><div style="height: 1px; width:100px; background-color: lightgrey; margin-top: -5%"></div><p style="font-size: 90%; text-align: center; margin-top: 5%">Online</p>
-            <button class="btn" id="botaoImagem" style="height: 50px; width:200px; background-color: rgb(250,200,200) !important;">Adicionar contato</button>
+            <form id="postFriend" method="post">
+              <button class="btn" id="botaoImagem" style="height: 50px; width:200px; background-color: rgb(250,200,200) !important;">Adicionar contato</button>
+            </form>
           </div>
         </div>
         <div class="col-sm" style="margin-right: -75%">
@@ -80,12 +82,12 @@
     <div class="container" style="margin-top: 3%;">
       <div class='col-lg-6' id="friends"></div>
     </div>
+    <p>{{nome}}</p>
     <footer style="background-color: purple; height:200px; width:100%; margin-top: 5%">
       <div class="container-fluid">
                     <span class="text-muted">@all rights reserved</span>
 
       </div>
-
     </footer>
           <!-- d="M7 0 V8 L2 5.8 Q0 5 0.8 4.5 C 0.8 4.2 5 5 7 -5 "
           d="M7 0 V3 C7 7 3 8 0.5 5.8 Q0 5 0.8 4.5 C 0.8 4.2 5 5 7 -5 "

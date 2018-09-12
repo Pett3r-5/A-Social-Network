@@ -71,17 +71,6 @@ $(document).ready(function () {
       }
     })
   }
-
-  $.ajax({
-    type: 'GET',
-    url: window.location.href
-    success: function (data) {
-      console.log(data)
-      // $('.ui-menu-item-wrapper').each(function (index) {
-      //   console.log('val' + $('.ui-menu-item-wrapper').eq(index).val())
-      //   $('.ui-menu-item-wrapper').eq(index).attr('href', url + '/:' + $('.ui-menu-item-wrapper').eq(index).val())
-      // })
-    }
-  })
+  $("#postFriend").attr('action', window.location.href)
   // $('#home').attr('href', url + '/home:' + )
 })

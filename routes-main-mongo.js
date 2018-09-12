@@ -107,11 +107,11 @@ function logadoOuNao (req, res, next) {
   if (req.isAuthenticated()) {
     return next()
   }
-  return res.redirect('/forbidden')
+  return res.status(403).redirect('/forbidden')
 }
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '/views/index.html'))
+  res.status(200).sendFile(path.join(__dirname, '/views/index.html'))
 })
 
 app.post('/', passport.authenticate('local', { failureRedirect: '/nada', failureFlash: true }), (req, res) => {
@@ -135,13 +135,13 @@ app.get('/home:id', logadoOuNao, (req, res) => {
       usuario.imagem = docs.imagem
       usuario.amigos = docs.amigos_id
       usuario.posts = docs.posts
-      res.render(path.join(__dirname, '/views/home.hbs'), usuario)
+      res.status(200).render(path.join(__dirname, '/views/home.hbs'), usuario)
     }).catch((err) => console.log(err))
   })
 }) // aqui passport eh um middleware, entao depois ainda pode ter o (req,res) =>
 
 app.get('/config:id', logadoOuNao, (req, res) => {
-  res.send('foi')
+  res.status(200).send('foi')
 })
 
 app.post('/home', upload.single('fileToUpload'), (req, res) => {
@@ -203,7 +203,7 @@ app.get('/search', (req, res) => {
     console.log('req.body.data ' + util.inspect(req._parsedOriginalUrl.query))
     db.collection('User').find({nome: {$regex: '.*' + req._parsedOriginalUrl.query + '.*'}}).toArray().then((docs) => {
       console.log('retorna usuario' + JSON.stringify(docs, undefined, 4))
-      res.json(docs)
+      res.status(200).json(docs)
     }).catch((err) => console.log(err))
   })
 })
@@ -217,17 +217,17 @@ app.get('/user:usuario', logadoOuNao, (req, res) => {
     db.collection('User').findOne({nome: usuario}).then((docs) => {
       console.log(docs)
       if (docs !== null) {
-        db.collection('User').find({ $and: [ { amigos_id: {'$in': [docs._id]} }, { _id: {'$in': [docs.amigos_id]}}]}).toArray().then((docs2) => {
+        db.collection('User').find({ $and: [ { amigos_id: {'$in': [docs._id]} }, { _id: { '$in': [docs.amigos_id] } } ] }).toArray().then((docs2) => {
           if (docs2 !== null) {
             docs.amigosMutuos = docs2
-            console.log('retorna usuario doc2' + JSON.stringify(docs, undefined, 4))
+            console.log('retorna usuario doc2' + JSON.stringify(docs2, undefined, 4))
           }
-          db.collection('User').find({ $and: [ { amigos_id: {'$in': [docs._id]} }, { $not: {_id: {'$in': [docs.amigos_id]}}} ]}).toArray().then((docs3) => {
+          db.collection('User').find({ $and: [ { amigos_id: {'$in': [docs._id]} }, { _id: { '$not': { '$in': [docs.amigos_id] } } } ] }).toArray().then((docs3) => {
             if (docs3 !== null) {
               docs.amigosPendentes = docs3
               console.log('retorna usuario doc3' + JSON.stringify(docs, undefined, 4))
             }
-            res.render(path.join(__dirname, '/views/usuario.hbs'), docs)
+            res.status(200).render(path.join(__dirname, '/views/usuario.hbs'), docs)
           }).catch((err) => console.log(err))
         }).catch((err) => console.log(err))
       }
@@ -241,8 +241,9 @@ app.post('/user:usuario', logadoOuNao, (req, res) => {
     const db = client.db('User')
     let usuario = req.params.usuario.substring(req.params.usuario.indexOf(':') + 1, req.params.usuario.length)
     db.collection('User').findOne({nome: usuario}).then((docs) => {
-      db.collection('User').findOneAndUpdate({_id: new ObjectID(req.user._id)}, {$push: {amigos_id: docs._id}}).then((docs) => {
-        res.redirect(`/home:${req.user._id}`)
+      db.collection('User').findOneAndUpdate({_id: new ObjectID(req.user._id)}, { $addToSet: { amigos_id: docs._id } }).then((docs) => {
+        console.log('foi update' + JSON.stringify(docs, undefined, 4))
+        res.status(200)
       }).catch((err) => console.log(err))
     })
   })
