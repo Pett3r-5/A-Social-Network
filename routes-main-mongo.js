@@ -10,11 +10,17 @@ const mongoClient = require('mongodb').MongoClient
 let ObjectID = require('mongodb').ObjectID
 const multer = require('multer')
 const crypto = require('crypto')
-var util = require('util')
+const util = require('util')
+const hbs = require('hbs')
+var exphbs = require('express-handlebars')
 
 let upload = multer({ dest: 'user_images/' })
 const LocalStrategy = require('passport-local').Strategy
 
+app.set('view engine', 'html')
+app.engine('html', hbs.__express)
+app.set('view engine', 'handlebars')
+app.engine('handlebars', exphbs({defaultLayout: 'main'}))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static(__dirname))
@@ -41,16 +47,12 @@ const storage = multer.diskStorage({
     cb(null, nomeRandom + extensao)
   }
 })
-
 upload = multer({ storage })
-
-let user = {nome: '', id: '', imagem: '', authToken: ''}
 
 passport.use(new LocalStrategy( // o filtro de buscar o usuario no banco de dados.
   function (username, password, done) {
     mongoClient.connect('mongodb://localhost:27017/User', { useNewUrlParser: true }, (err, client) => {
       if (err) console.log(`Não conseguiu se conectar ao servidor mongo: ${err}`)
-
       const db = client.db('User')
       db.collection('User').findOne({nome: username}).then((docs) => {
         console.log('print:' + docs)
@@ -69,7 +71,7 @@ passport.use(new LocalStrategy( // o filtro de buscar o usuario no banco de dado
               return done(null, false)
             } else {
               console.log('true')
-              user = docs
+              let user = docs
               console.log('aham ' + JSON.stringify(docs, undefined, 4))
               client.close()
               return done(null, user)
@@ -92,11 +94,9 @@ passport.serializeUser(function (user, done) {
 passport.deserializeUser(function (id, done) {
   mongoClient.connect('mongodb://localhost:27017/User', { useNewUrlParser: true }, (err, client) => {
     if (err) console.log(`Não conseguiu se conectar ao servidor mongo: ${err}`)
-    console.log('ooook')
     const db = client.db('User')
     db.collection('User').findOne({_id: new ObjectID(id)}).then((docs) => {
-      user = docs
-      console.log('alala' + JSON.stringify(user, undefined, 4))
+      let user = docs
       client.close()
       done(err, user)
     }).catch((err) => console.log(err))
@@ -115,12 +115,7 @@ app.get('/', (req, res) => {
 })
 
 app.post('/', passport.authenticate('local', { failureRedirect: '/nada', failureFlash: true }), (req, res) => {
-  user.nome = req.user.nome
-  user._id = req.user._id
-  console.log('uhu' + JSON.stringify(req.user, undefined, 4))
-  user.authToken = req.user.auth_token
-  user.imagem = req.user.imagem
-  res.redirect(`/home:${user._id}`) // esse user.id tá vindo do done(null, user) do localStrategy
+  res.redirect(`/home:${req.user._id}`) // esse user.id tá vindo do done(null, user) do localStrategy
 }) // aqui passport.authenticate eh um middleware, entao depois ainda pode ter o (req,res) => {}
 
 app.get('/home:id', logadoOuNao, (req, res) => {
@@ -148,7 +143,7 @@ app.post('/home', upload.single('fileToUpload'), (req, res) => {
   console.log('body: ' + JSON.stringify(req.body, undefined, 4))
   // console.log('userCadastro: ' + JSON.parse(req, undefined, 4))
   if (req.body.user_cadastro) {
-    let cadastro = {user: req.body.user_cadastro, email: req.body.email_cadastro, password: req.body.senha_cadastro, auth_token: req.body.user_cadastro, imagem: './user_images/avatar.jpg'}
+    let cadastro = {user: req.body.user_cadastro, email: req.body.email_cadastro, password: req.body.senha_cadastro, auth_token: req.body.user_cadastro, imagem: 'avatar.jpg'}
     if (req.file) {
       console.log('VAII ' + req.file.filename)
       cadastro.imagem = req.file.filename
@@ -213,21 +208,30 @@ app.get('/user:usuario', logadoOuNao, (req, res) => {
     if (err) console.log(`Não conseguiu se conectar ao servidor mongo: ${err}`)
     const db = client.db('User')
     let usuario = req.params.usuario.substring(req.params.usuario.indexOf(':') + 1, req.params.usuario.length)
-    console.log('aqui' + req.params.usuario)
+    console.log('aqui:::' + JSON.stringify(req.params, undefined, 4))
+    console.log('aqui:::' + req.params.usuario)
     db.collection('User').findOne({nome: usuario}).then((docs) => {
-      console.log(docs)
       if (docs !== null) {
-        db.collection('User').find({ $and: [ { amigos_id: {'$in': [docs._id]} }, { _id: { '$in': [docs.amigos_id] } } ] }).toArray().then((docs2) => {
-          if (docs2 !== null) {
-            docs.amigosMutuos = docs2
+        db.collection('User').find({ amigos_id: {'$in': [docs._id]} }, { _id: { '$in': docs.amigos_id } }).toArray().then((docs2) => {
+          docs.amigos = []
+          if (docs2.length > 0) {
+            for (let i = 0; i < docs2.length; i++) {
+              docs.amigos[i] = { _id: docs2[i]._id, nome: docs2[i].nome, imagem: docs2[i].imagem }
+            }
             console.log('retorna usuario doc2' + JSON.stringify(docs2, undefined, 4))
           }
-          db.collection('User').find({ $and: [ { amigos_id: {'$in': [docs._id]} }, { _id: { '$not': { '$in': [docs.amigos_id] } } } ] }).toArray().then((docs3) => {
-            if (docs3 !== null) {
-              docs.amigosPendentes = docs3
-              console.log('retorna usuario doc3' + JSON.stringify(docs, undefined, 4))
+          db.collection('User').find({ $and: [ { amigos_id: {'$in': [docs._id]} }, { _id: { '$not': { '$in': docs.amigos_id } } } ] }).toArray().then((docs3) => {
+            docs.amigosPendentes = []
+            docs.usuarioLogado = req.user
+            if (docs3.length > 0) {
+              for (let i = 0; i < docs3.length; i++) {
+                docs.amigosPendentes[i] = { _id: docs3[i]._id, nome: docs3[i].nome, imagem: docs3[i].imagem }
+              }
             }
-            res.status(200).render(path.join(__dirname, '/views/usuario.hbs'), docs)
+            console.log('retorna usuario doc3' + JSON.stringify(docs, undefined, 4))
+            docs = JSON.stringify(docs)
+            docs = encodeURI(docs)
+            res.status(200).render(path.join(__dirname, '/views/usuario.hbs'), { "usuario": docs })
           }).catch((err) => console.log(err))
         }).catch((err) => console.log(err))
       }
@@ -243,7 +247,7 @@ app.post('/user:usuario', logadoOuNao, (req, res) => {
     db.collection('User').findOne({nome: usuario}).then((docs) => {
       db.collection('User').findOneAndUpdate({_id: new ObjectID(req.user._id)}, { $addToSet: { amigos_id: docs._id } }).then((docs) => {
         console.log('foi update' + JSON.stringify(docs, undefined, 4))
-        res.status(200)
+        res.status(200).send('ok')
       }).catch((err) => console.log(err))
     })
   })
