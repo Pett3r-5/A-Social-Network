@@ -15,6 +15,11 @@ $(document).ready(function () {
     console.log(foi);
     $('#procura').attr('href', url + '/user:' + $('#searching').val())
   })
+  $('#procura').click(function (event) {
+    event.preventDefault()
+    window.location = url + '/user:' + $('#searching').val()
+  })
+  // document.getElementsByClassName('postFriend').onclick
   document.getElementById("searching").onkeyup = function (event) {
     var input = $('#searching').val()
     console.log(input)
@@ -27,15 +32,20 @@ $(document).ready(function () {
           data[i] = data[i].nome
         }
         $('#searching').autocomplete({
-          source: data
-        })
+          source: data,
+          select: function (e, ui) {
+            $('#procura').click(function (event) {
+              event.preventDefault()
+              window.location = url + '/user:' + ui.item.value
+            })
+          }
         // $('.ui-menu-item-wrapper').each(function (index) {
         //   console.log('val' + $('.ui-menu-item-wrapper').eq(index).val())
         //   $('.ui-menu-item-wrapper').eq(index).attr('href', url + '/:' + $('.ui-menu-item-wrapper').eq(index).val())
         // })
+        })
       }
     })
-  }
-  $("#postFriend").attr('action', window.location.href)
   // $('#home').attr('href', url + '/home:' + )
+  }
 })

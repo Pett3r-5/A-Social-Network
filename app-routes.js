@@ -115,8 +115,8 @@ app.get('/', (req, res) => {
 })
 
 app.post('/', passport.authenticate('local', { failureRedirect: '/nada', failureFlash: true }), (req, res) => {
-  res.redirect(`/home:${req.user._id}`) // esse user.id tá vindo do done(null, user) do localStrategy
-}) // aqui passport.authenticate eh um middleware, entao depois ainda pode ter o (req,res) => {}
+  res.redirect(`/user:${req.nome}`) // esse user.id tá vindo do done(null, user) do localStrategy
+})
 
 app.get('/home:id', logadoOuNao, (req, res) => {
   let usuario = {_id: req.params.id.substring(req.params.id.indexOf(':') + 1, req.params.id.length), nome: '', imagem: '', amigos: '', posts: ''}
@@ -220,19 +220,28 @@ app.get('/user:usuario', logadoOuNao, (req, res) => {
             }
             console.log('retorna usuario doc2' + JSON.stringify(docs2, undefined, 4))
           }
-          db.collection('User').find({ $and: [ { amigos_id: {'$in': [docs._id]} }, { _id: { '$not': { '$in': docs.amigos_id } } } ] }).toArray().then((docs3) => {
-            docs.amigosPendentes = []
-            docs.usuarioLogado = req.user
-            if (docs3.length > 0) {
-              for (let i = 0; i < docs3.length; i++) {
-                docs.amigosPendentes[i] = { _id: docs3[i]._id, nome: docs3[i].nome, imagem: docs3[i].imagem }
+          if (req.user._id === docs._id) {
+            db.collection('User').find({ $and: [ { amigos_id: {'$in': [docs._id]} }, { _id: { '$not': { '$in': docs.amigos_id } } } ] }).toArray().then((docs3) => {
+              docs.amigosPendentes = []
+              docs.usuarioLogado = req.user
+              if (docs3.length > 0) {
+                for (let i = 0; i < docs3.length; i++) {
+                  docs.amigosPendentes[i] = { _id: docs3[i]._id, nome: docs3[i].nome, imagem: docs3[i].imagem }
+                }
               }
+              console.log('retorna usuario doc3' + JSON.stringify(docs, undefined, 4))
+              docs = JSON.stringify(docs)
+              docs = encodeURI(docs)
+              res.status(200).render(path.join(__dirname, '/views/home.hbs'), { 'usuario': docs })
+            }).catch((err) => console.log(err))
+          } else {
+            if (req.user.amigos_id.indexOf(docs._id) !== -1) {
+              docs.adicionado = true
+            } else {
+              docs.adicionado = false
             }
-            console.log('retorna usuario doc3' + JSON.stringify(docs, undefined, 4))
-            docs = JSON.stringify(docs)
-            docs = encodeURI(docs)
-            res.status(200).render(path.join(__dirname, '/views/usuario.hbs'), { "usuario": docs })
-          }).catch((err) => console.log(err))
+            res.status(200).render(path.join(__dirname, '/views/usuario.hbs'), { 'usuario': docs })
+          }
         }).catch((err) => console.log(err))
       }
     }).catch((err) => console.log(err))
@@ -252,5 +261,13 @@ app.post('/user:usuario', logadoOuNao, (req, res) => {
     })
   })
 })
+
+// app.post('/accept', logadoOuNao, (req, res) => {
+//   mongoClient.connect('mongodb://localhost:27017/User', { useNewUrlParser: true }, (err, client) => {
+//     if (err) console.log(err)
+//     const db = client.db('User')
+//     db.collection('User').findOneAndUpdate({ _id: new ObjectID(req.user._id) }, {  })
+//   })
+// })
 
 app.listen(3001)

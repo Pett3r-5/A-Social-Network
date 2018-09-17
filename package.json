@@ -33,5 +33,6 @@
   "bugs": {
     "url": "https://github.com/Petter55/A-Social-Network/issues"
   },
-  "homepage": "https://github.com/Petter55/A-Social-Network#readme"
+  "homepage": "https://github.com/Petter55/A-Social-Network#readme",
+  "devDependencies": {}
 }
