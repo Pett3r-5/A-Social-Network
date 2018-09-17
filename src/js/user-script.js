@@ -10,23 +10,6 @@ $(document).ready(function () {
     $('[data-original-title]').popover('hide');
   }
 });
-  window.addEventListener('scroll', function () {
-    if ($(document).scrollTop() > 50) {
-      $('#navbarSupportedContent').css('padding-bottom', '0%')
-      $('#navbarSupportedContent').css('padding-top', '0%')
-      $('#logo').css('font-size', '100%')
-      $('#logo').css('color', 'rgb(100, 150, 200)')
-      $('#navbase').css('background-color', 'rgb(250, 250, 250)')
-      console.log('oi')
-    } else {
-      $('#navbarSupportedContent').css('padding-bottom', '2%')
-      $('#navbarSupportedContent').css('padding-top', '2%')
-      $('#logo').css('font-size', '300%')
-      $('#logo').css('color', 'rgb(150, 200, 250)')
-      $('#navbase').css('background-color', 'rgb(228, 199, 255)')
-      console.log('io')
-    }
-  })
   $('.ui-menu-item-wrapper').click(function () {
     // window.location = url + '/user:' + $('#searching').val()
     console.log(foi);
@@ -40,10 +23,8 @@ $(document).ready(function () {
       data: input,
       url: url + '/search',
       success: function (data) {
-        console.log(data)
-        if (!Array.isArray(data)) {
-          data = [data]
-          console.log(data)
+        for (var i = 0; i < data.length; i++) {
+          data[i] = data[i].nome
         }
         $('#searching').autocomplete({
           source: data

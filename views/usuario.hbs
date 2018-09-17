@@ -4,9 +4,9 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="../src/js/jquery-ui-1.12.1/jquery-ui.min.css" />
+    <script src="../src/js/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> <!--importa css do bootstrap, para que ele possa ser modificado-->
     <link href="../src/css/home.css" rel="stylesheet"/>
     <script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
     <script src="../src/js/jquery-ui-1.12.1/jquery-ui.min.js"></script>
@@ -19,20 +19,40 @@
         console.log(JSON.stringify(user, undefined, 4))
         $('#photoPerfil').css('background-image', ' url(../user_images/' + user.imagem + ')')
 
-        if ($(document).scrollTop() > 250) {
-          if (!$( "#perfilUm" ).length) {
-            $('.navbar-nav').append("<div id='perfilUm' class='fade-in' style='height: 20px; width: 20px;'><button type='button' class='btn btn-lg btn-danger' id='photoPerfil2' data-toggle='popover' title='José' data-content='<a href=\"http://pudim.com.br\">Editar perfil</a>' style='margin-top: 40%; border: none;'><img src='../user_images/" + user.usuarioLogado.imagem + "' width='90' height='50' /></button></div>")
-            $(function () {
-              var template1 = '<a href="http://pudim.com.br" class="popover-body">editar perfil</a>'
-            $('#photoPerfil2').popover({html: true})
-          })
+        window.addEventListener('scroll', function () {
+          if ($(document).scrollTop() > 50) {
+            $('#navbarSupportedContent').css('padding-bottom', '0%')
+            $('#navbarSupportedContent').css('padding-top', '0%')
+            $('#logo').css('font-size', '100%')
+            $('#logo').css('color', 'rgb(100, 150, 200)')
+            $('#navbase').css('background-color', 'rgb(250, 250, 250)')
+            console.log('oi')
+          } else {
+            $('#navbarSupportedContent').css('padding-bottom', '2%')
+            $('#navbarSupportedContent').css('padding-top', '2%')
+            $('#logo').css('font-size', '300%')
+            $('#logo').css('color', 'rgb(150, 200, 250)')
+            $('#navbase').css('background-color', 'rgb(228, 199, 255)')
+            console.log('io')
           }
-        } else {
-          if ($( "#perfilDois" ).length) {
-            $('#photoPerfil2').popover('dispose')
-            $('#perfilUm').remove()
+          if ($(document).scrollTop() > 250) {
+            console.log('asdsad');
+            if (!$("#perfilUm").length) {
+              console.log('aqds');
+              $('.navbar-nav').append("<div id='perfilUm' class='fade-in' style='height: 20px; width: 20px;'><button type='button' class='btn btn-lg btn-danger' id='photoPerfil2' data-toggle='popover' title='José' data-content='<a href=\"http://pudim.com.br\">Editar perfil</a>' style='background-image: url(&quot../user_images/" + user.usuarioLogado.imagem + "&quot); margin-top: 40%; border: none;'></button></div>")
+              $(function () {
+                var template1 = '<a href="http://pudim.com.br" class="popover-body">editar perfil</a>'
+              $('#photoPerfil2').popover({html: true})
+            })
+            }
+          } else {
+            if ($( "#perfilDois" ).length) {
+              $('#photoPerfil2').popover('dispose')
+              $('#perfilUm').remove()
+            }
           }
-        }
+        })
+
 
         $('#nomePerfil').html('<b>' + user.nome + '</b>')
         for (var i = 0; i < user.amigos.length; i++) {
@@ -123,6 +143,6 @@
           <!-- d="M7 0 V8 L2 5.8 Q0 5 0.8 4.5 C 0.8 4.2 5 5 7 -5 "
           d="M7 0 V3 C7 7 3 8 0.5 5.8 Q0 5 0.8 4.5 C 0.8 4.2 5 5 7 -5 "
           d="M7 0 V3 C7 7 3 8 0.5 5.4 Q0 4.4 0.8 4.3 C 0.8 4.2 5 5 7 -5 " -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+          <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>   <!--importa bootstrap-->
   </body>
 </html>
