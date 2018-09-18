@@ -17,6 +17,23 @@
         var user = decodeURI('{{usuario}}')
         user = JSON.parse(user)
         console.log(JSON.stringify(user, undefined, 4))
+
+        if (user.adicionar) {
+          var regular = new RegExp('&#x3D;', 'g');
+          user.adicionar = String(user.adicionar).replace(regular, '=');
+          var regular = new RegExp('/\\"', 'g');
+          user.adicionar = String(user.adicionar).replace(regular, '\'');
+          var regular = new RegExp('\\"', 'g');
+          user.adicionar = String(user.adicionar).replace(regular, '\'');
+          $('#adiconarForm').append(user.adicionar)
+          $('#postFriend').attr('action', url + '/user:' + user.nome)
+          console.log('adas ' + $('#postFriend').html());
+        }
+        $('#botaoImagem').click(function (e) {
+          $('#botaoImagem').remove()
+        })
+
+        $('#home').attr('href', url + '/user:' + user.usuarioLogado.nome)
         $('#photoPerfil').css('background-image', ' url(../user_images/' + user.imagem + ')')
 
         window.addEventListener('scroll', function () {
@@ -39,7 +56,7 @@
             console.log('asdsad');
             if (!$("#perfilUm").length) {
               console.log('aqds');
-              $('.navbar-nav').append("<div id='perfilUm' class='fade-in' style='height: 20px; width: 20px;'><button type='button' class='btn btn-lg btn-danger' id='photoPerfil2' data-toggle='popover' title='José' data-content='<a href=\"http://pudim.com.br\">Editar perfil</a>' style='background-image: url(&quot../user_images/" + user.usuarioLogado.imagem + "&quot); margin-top: 40%; border: none;'></button></div>")
+              $('.navbar-nav').append("<div id='perfilUm' class='fade-in' style='height: 20px; width: 20px;'><button type='button' class='btn btn-lg btn-danger' id='photoPerfil2' data-toggle='popover' title='" + user.usuarioLogado.nome + "' data-content='<a href=\"http://pudim.com.br\">Editar perfil</a>' style='background-image: url(&quot../user_images/" + user.usuarioLogado.imagem + "&quot); margin-top: 40%; border: none;'></button></div>")
               $(function () {
                 var template1 = '<a href="http://pudim.com.br" class="popover-body">editar perfil</a>'
               $('#photoPerfil2').popover({html: true})
@@ -56,7 +73,7 @@
 
         $('#nomePerfil').html('<b>' + user.nome + '</b>')
         for (var i = 0; i < user.amigos.length; i++) {
-          $('#friends').append("<div style='height: 80px; width: 80px; margin-top:0%; margin:4%;'> <a style='color: gray; text-decoration:none;' href='" + url + "/user:" + user.amigos[i].nome + "'><button type='button' class='btn btn-lg btn-danger'  id='photoPerfil' style='background-image: url(./user_images/" + user.amigos[i].imagem + "); border: none; height: 100%; width: 100%; border-radius: 50%;'></button><p style='text-align: center; margin-top: 10%;'>" + user.amigos[i].nome + "</p></a></div>")
+          $('#friends').append("<div style='height: 80px; width: 80px; margin-top:0%; margin:4%;'> <a style='color: gray; text-decoration:none;' href='" + url + "/user:" + user.amigos[i].nome + "'><button type='button' class='btn btn-lg btn-danger'  id='photoPerfil' style='box-shadow: 0px 1px 3px #111111; background-image: url(./user_images/" + user.amigos[i].imagem + "); border: none; height: 100%; width: 100%; border-radius: 50%;'></button><p style='text-align: center; margin-top: 10%;'>" + user.amigos[i].nome + "</p></a></div>")
         }
 
       })
@@ -74,7 +91,7 @@
             <a class="nav-link" id="home">Home <span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="http://localhost:3001/config">Settings</a>
+            <a class="nav-link" id="settings">Settings</a>
           </li>
         </ul>
         <form class="form-inline my-2 my-lg-0" method="get" target="">
@@ -87,16 +104,13 @@
     </nav>
     <div class="container-fluid" style="padding-left: 5%; padding-right: 25%">
       <div class="row">
-        <div class="col-sm"  style="max-width: 13%">
-          <div id="perfilDois" style="height: 100px; width: 100px;">
+        <div class="col-sm"  id="adiconarForm" style="text-align:center; max-width: 20%">
+          <div id="perfilDois" style="margin: auto; height: 100px; width: 100px;">
             <div class="blocos" id="photoPerfil"></div>
+            </div>
             <p id="nomePerfil" style="text-align: center; margin-top: 7%; font-size: 120%;"></p>
-              <div style="height: 1px; width:100px; background-color: lightgrey; margin-top: -5%"></div>
+              <div style="margin: auto; height: 1px; width:100px; background-color: lightgrey; margin-top: -5%"></div>
               <p style="font-size: 90%; text-align: center; margin-top: 5%">Online</p>
-            <form id="postFriend" method="post">
-              <button class="btn" id="botaoImagem" style="height: 50px; width:200px; background-color: rgb(250,200,200) !important;">Adicionar contato</button>
-            </form>
-          </div>
         </div>
         <div class="col-sm" style="margin-right: -75%">
           <svg id="balaoCima" viewbox="0 0 5 10" style="margin-top: 10%">

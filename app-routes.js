@@ -115,7 +115,7 @@ app.get('/', (req, res) => {
 })
 
 app.post('/', passport.authenticate('local', { failureRedirect: '/nada', failureFlash: true }), (req, res) => {
-  res.redirect(`/user:${req.nome}`) // esse user.id tá vindo do done(null, user) do localStrategy
+  res.redirect(`/user:${req.user.nome}`) // esse user.id tá vindo do done(null, user) do localStrategy
 })
 
 app.get('/home:id', logadoOuNao, (req, res) => {
@@ -220,10 +220,13 @@ app.get('/user:usuario', logadoOuNao, (req, res) => {
             }
             console.log('retorna usuario doc2' + JSON.stringify(docs2, undefined, 4))
           }
-          if (req.user._id === docs._id) {
+          console.log('req.user._id' + req.user._id)
+          console.log('docs._id' + docs._id)
+          docs.usuarioLogado = req.user
+          if (String(req.user._id) === String(docs._id)) {
             db.collection('User').find({ $and: [ { amigos_id: {'$in': [docs._id]} }, { _id: { '$not': { '$in': docs.amigos_id } } } ] }).toArray().then((docs3) => {
+              console.log('self')
               docs.amigosPendentes = []
-              docs.usuarioLogado = req.user
               if (docs3.length > 0) {
                 for (let i = 0; i < docs3.length; i++) {
                   docs.amigosPendentes[i] = { _id: docs3[i]._id, nome: docs3[i].nome, imagem: docs3[i].imagem }
@@ -235,11 +238,12 @@ app.get('/user:usuario', logadoOuNao, (req, res) => {
               res.status(200).render(path.join(__dirname, '/views/home.hbs'), { 'usuario': docs })
             }).catch((err) => console.log(err))
           } else {
-            if (req.user.amigos_id.indexOf(docs._id) !== -1) {
-              docs.adicionado = true
-            } else {
-              docs.adicionado = false
+            console.log('not-self')
+            if (req.user.amigos_id.indexOf(docs._id) === -1) {
+              docs.adicionar = '<form id="postFriend" method="post" style="margin: auto"><button type="submit" form="postFriend" class="btn" id="botaoImagem" style="height: 50px; width:200px; background-color: rgb(250,200,200) !important;">Adicionar contato</button></form>'
             }
+            docs = JSON.stringify(docs)
+            docs = encodeURI(docs)
             res.status(200).render(path.join(__dirname, '/views/usuario.hbs'), { 'usuario': docs })
           }
         }).catch((err) => console.log(err))
@@ -252,6 +256,7 @@ app.post('/user:usuario', logadoOuNao, (req, res) => {
   mongoClient.connect('mongodb://localhost:27017/User', { useNewUrlParser: true }, (err, client) => {
     if (err) console.log(`Não conseguiu se conectar ao servidor mongo: ${err}`)
     const db = client.db('User')
+    console.log('vaiisaiasi')
     let usuario = req.params.usuario.substring(req.params.usuario.indexOf(':') + 1, req.params.usuario.length)
     db.collection('User').findOne({nome: usuario}).then((docs) => {
       db.collection('User').findOneAndUpdate({_id: new ObjectID(req.user._id)}, { $addToSet: { amigos_id: docs._id } }).then((docs) => {
@@ -261,7 +266,6 @@ app.post('/user:usuario', logadoOuNao, (req, res) => {
     })
   })
 })
-
 // app.post('/accept', logadoOuNao, (req, res) => {
 //   mongoClient.connect('mongodb://localhost:27017/User', { useNewUrlParser: true }, (err, client) => {
 //     if (err) console.log(err)

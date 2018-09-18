@@ -3,7 +3,9 @@ $(document).ready(function () {
   // var template = Handlebars.compile(source)
   // var output = template({nome: 'oi', _id: 'ninguem'})
   // document.getElementById('pp').innerHTML = output
+
   var url = location.protocol + '//' + location.hostname + ':' + location.port
+  $('#settings').attr('href', url + '/config')
 // background-image: url('../avatar.jpg');
   $('html').on('click', function(e) {
   if (typeof $(e.target).data('original-title') === 'undefined' && !$(e.target).parents().is('.popover.in')) {
