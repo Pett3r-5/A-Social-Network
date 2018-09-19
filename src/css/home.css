@@ -64,6 +64,12 @@
   box-shadow: 0px 1px 3px #111111;
 }
 
+.wrapper {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-gap: 10px;
+}
+
 .balao {
    font-size: 110%;
    font-family: verdana;

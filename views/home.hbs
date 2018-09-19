@@ -18,6 +18,21 @@
         user = JSON.parse(user)
         console.log(JSON.stringify(user, undefined, 4))
 
+        if (user.adicionar) {
+          var regular = new RegExp('&#x3D;', 'g');
+          user.adicionar = String(user.adicionar).replace(regular, '=');
+          var regular = new RegExp('/\\"', 'g');
+          user.adicionar = String(user.adicionar).replace(regular, '\'');
+          var regular = new RegExp('\\"', 'g');
+          user.adicionar = String(user.adicionar).replace(regular, '\'');
+          $('#adiconarForm').append(user.adicionar)
+          $('#postFriend').attr('action', url + '/user:' + user.nome)
+          console.log('adas ' + $('#postFriend').html());
+        }
+        $('#botaoImagem').click(function (e) {
+          $('#botaoImagem').prop('disabled', true)
+        })
+
         $('#home').attr('href', url + '/user:' + user.usuarioLogado.nome)
         $('#photoPerfil').css('background-image', ' url(../user_images/' + user.imagem + ')')
 
@@ -58,7 +73,7 @@
 
         $('#nomePerfil').html('<b>' + user.nome + '</b>')
         for (var i = 0; i < user.amigos.length; i++) {
-          $('#friends').append("<div style='height: 80px; width: 80px; margin-top:0%; margin:4%;'> <a style='color: gray; text-decoration:none;' href='" + url + "/user:" + user.amigos[i].nome + "'><button type='button' class='btn btn-lg btn-danger'  id='photoPerfil' style='box-shadow: 0px 1px 3px #111111; background-image: url(./user_images/" + user.amigos[i].imagem + "); border: none; height: 100%; width: 100%; border-radius: 50%;'></button><p style='text-align: center; margin-top: 10%;'>" + user.amigos[i].nome + "</p></a></div>")
+          $('.wrapper').append("<div style='height: 80px; width: 80px; margin-top:0%; margin:4%;'> <a style='color: gray; text-decoration:none;' href='" + url + "/user:" + user.amigos[i].nome + "'><button type='button' class='btn btn-lg btn-danger'  id='photoPerfil' style='box-shadow: 0px 1px 3px #111111; background-image: url(./user_images/" + user.amigos[i].imagem + "); border: none; height: 100%; width: 100%; border-radius: 50%;'></button><p style='text-align: center; margin-top: 10%;'>" + user.amigos[i].nome + "</p></a></div>")
         }
 
       })
@@ -89,13 +104,13 @@
     </nav>
     <div class="container-fluid" style="padding-left: 5%; padding-right: 25%">
       <div class="row">
-        <div class="col-sm"  style="max-width: 13%">
-          <div id="perfilDois" style="height: 100px; width: 100px;">
+        <div class="col-sm"  id="adiconarForm" style="text-align:center; max-width: 20%">
+          <div id="perfilDois" style="margin: auto; height: 100px; width: 100px;">
             <div class="blocos" id="photoPerfil"></div>
+            </div>
             <p id="nomePerfil" style="text-align: center; margin-top: 7%; font-size: 120%;"></p>
-              <div style="height: 1px; width:100px; background-color: lightgrey; margin-top: -5%"></div>
+              <div style="margin: auto; height: 1px; width:100px; background-color: lightgrey; margin-top: -5%"></div>
               <p style="font-size: 90%; text-align: center; margin-top: 5%">Online</p>
-          </div>
         </div>
         <div class="col-sm" style="margin-right: -75%">
           <svg id="balaoCima" viewbox="0 0 5 10" style="margin-top: 10%">
@@ -131,7 +146,7 @@
       </div>
     </div>
     <div class="container" style="margin-top: 3%;">
-      <div class='col-lg-6' id="friends"></div>
+      <div class='wrapper' style="margin-bottom: 20%;"></div>
     </div>
     <footer style="background-color: purple; height:200px; width:100%; margin-top: 5%">
       <div class="container-fluid">

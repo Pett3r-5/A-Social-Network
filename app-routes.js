@@ -118,23 +118,6 @@ app.post('/', passport.authenticate('local', { failureRedirect: '/nada', failure
   res.redirect(`/user:${req.user.nome}`) // esse user.id tá vindo do done(null, user) do localStrategy
 })
 
-app.get('/home:id', logadoOuNao, (req, res) => {
-  let usuario = {_id: req.params.id.substring(req.params.id.indexOf(':') + 1, req.params.id.length), nome: '', imagem: '', amigos: '', posts: ''}
-  mongoClient.connect('mongodb://localhost:27017/User', { useNewUrlParser: true }, (err, client) => {
-    if (err) console.log(err)
-    const db = client.db('User')
-    db.collection('User').findOne({_id: new ObjectID(usuario._id)}).then((docs) => {
-      console.log('retorno ' + JSON.stringify(docs, undefined, 4))
-      console.log('aaa' + docs.imagem)
-      usuario.nome = docs.nome
-      usuario.imagem = docs.imagem
-      usuario.amigos = docs.amigos_id
-      usuario.posts = docs.posts
-      res.status(200).render(path.join(__dirname, '/views/home.hbs'), usuario)
-    }).catch((err) => console.log(err))
-  })
-}) // aqui passport eh um middleware, entao depois ainda pode ter o (req,res) =>
-
 app.get('/config:id', logadoOuNao, (req, res) => {
   res.status(200).send('foi')
 })
@@ -220,7 +203,7 @@ app.get('/user:usuario', logadoOuNao, (req, res) => {
             }
             console.log('retorna usuario doc2' + JSON.stringify(docs2, undefined, 4))
           }
-          console.log('req.user._id' + req.user._id)
+          console.log('req.user._id' + typeof req.user._id)
           console.log('docs._id' + docs._id)
           docs.usuarioLogado = req.user
           if (String(req.user._id) === String(docs._id)) {
@@ -239,7 +222,10 @@ app.get('/user:usuario', logadoOuNao, (req, res) => {
             }).catch((err) => console.log(err))
           } else {
             console.log('not-self')
-            if (req.user.amigos_id.indexOf(docs._id) === -1) {
+            if (String(req.user.amigos_id).indexOf(String(docs._id)) === -1 && String(docs.amigos_id).indexOf(String(req.user._id)) === -1) {
+              console.log('docs.amigos_id ' + typeof String(docs.amigos_id[1]))
+              console.log('req.user.amigos_id ' + req.user.amigos_id)
+              console.log('docs.amigos_id.indexOf(req.user._id) ' + docs.amigos_id.indexOf(req.user._id))
               docs.adicionar = '<form id="postFriend" method="post" style="margin: auto"><button type="submit" form="postFriend" class="btn" id="botaoImagem" style="height: 50px; width:200px; background-color: rgb(250,200,200) !important;">Adicionar contato</button></form>'
             }
             docs = JSON.stringify(docs)
@@ -259,10 +245,12 @@ app.post('/user:usuario', logadoOuNao, (req, res) => {
     console.log('vaiisaiasi')
     let usuario = req.params.usuario.substring(req.params.usuario.indexOf(':') + 1, req.params.usuario.length)
     db.collection('User').findOne({nome: usuario}).then((docs) => {
-      db.collection('User').findOneAndUpdate({_id: new ObjectID(req.user._id)}, { $addToSet: { amigos_id: docs._id } }).then((docs) => {
+      db.collection('User').findOneAndUpdate({_id: new ObjectID(req.user._id)}, { $addToSet: { amigos_id: docs._id } }).then((docs2) => {
         console.log('foi update' + JSON.stringify(docs, undefined, 4))
-        res.status(200).send('ok')
-      }).catch((err) => console.log(err))
+        db.collection('User').findOneAndUpdate({_id: new ObjectID(docs._id)}, { $addToSet: { amigos_id: req.user._id } }).then((docs3) => {
+          res.redirect('/user:' + usuario)
+        }).catch((err) => console.log(err))
+      })
     })
   })
 })

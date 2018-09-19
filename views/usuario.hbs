@@ -30,7 +30,7 @@
           console.log('adas ' + $('#postFriend').html());
         }
         $('#botaoImagem').click(function (e) {
-          $('#botaoImagem').remove()
+          $('#botaoImagem').prop('disabled', true)
         })
 
         $('#home').attr('href', url + '/user:' + user.usuarioLogado.nome)
@@ -73,7 +73,7 @@
 
         $('#nomePerfil').html('<b>' + user.nome + '</b>')
         for (var i = 0; i < user.amigos.length; i++) {
-          $('#friends').append("<div style='height: 80px; width: 80px; margin-top:0%; margin:4%;'> <a style='color: gray; text-decoration:none;' href='" + url + "/user:" + user.amigos[i].nome + "'><button type='button' class='btn btn-lg btn-danger'  id='photoPerfil' style='box-shadow: 0px 1px 3px #111111; background-image: url(./user_images/" + user.amigos[i].imagem + "); border: none; height: 100%; width: 100%; border-radius: 50%;'></button><p style='text-align: center; margin-top: 10%;'>" + user.amigos[i].nome + "</p></a></div>")
+          $('.wrapper').append("<div style='height: 80px; width: 80px; margin-top:0%; margin:4%;'> <a style='color: gray; text-decoration:none;' href='" + url + "/user:" + user.amigos[i].nome + "'><button type='button' class='btn btn-lg btn-danger'  id='photoPerfil' style='box-shadow: 0px 1px 3px #111111; background-image: url(./user_images/" + user.amigos[i].imagem + "); border: none; height: 100%; width: 100%; border-radius: 50%;'></button><p style='text-align: center; margin-top: 10%;'>" + user.amigos[i].nome + "</p></a></div>")
         }
 
       })
@@ -146,7 +146,7 @@
       </div>
     </div>
     <div class="container" style="margin-top: 3%;">
-      <div class='col-lg-6' id="friends"></div>
+      <div class='wrapper' style="margin-bottom: 20%;"></div>
     </div>
     <footer style="background-color: purple; height:200px; width:100%; margin-top: 5%">
       <div class="container-fluid">

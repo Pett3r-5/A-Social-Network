@@ -3,6 +3,28 @@ $(document).ready(function () {
   // var template = Handlebars.compile(source)
   // var output = template({nome: 'oi', _id: 'ninguem'})
   // document.getElementById('pp').innerHTML = output
+  if ($(window).width() <= 1097) {
+    $('.wrapper').css('grid-template-columns', 'repeat(6, 1fr)');
+  } else{
+      $('.wrapper').css('grid-template-columns', 'repeat(8, 1fr)');
+  }
+  $(window).resize(function(){
+    if($(window).width()<= 1097){
+        $('.wrapper').css('grid-template-columns', 'repeat(6, 1fr)');
+    } else{
+        $('.wrapper').css('grid-template-columns', 'repeat(8, 1fr)');
+    }
+  })
+
+  if ($(window).width() <= 750) {
+    $('.wrapper').css('grid-template-columns', 'repeat(4, 1fr)');
+  }
+  $(window).resize(function(){
+    if($(window).width() <= 750){
+        $('.wrapper').css('grid-template-columns', 'repeat(4, 1fr)');
+    }
+  })
+
   var url = location.protocol + '//' + location.hostname + ':' + location.port
   $('#settings').attr('href', url + '/config')
 // background-image: url('../avatar.jpg');
@@ -13,7 +35,7 @@ $(document).ready(function () {
 });
   $('.ui-menu-item-wrapper').click(function () {
     // window.location = url + '/user:' + $('#searching').val()
-    console.log(foi);
+    console.log('foi')
     $('#procura').attr('href', url + '/user:' + $('#searching').val())
   })
   $('#procura').click(function (event) {
