@@ -38,19 +38,19 @@
             <img src="emojiHi.png" class="img-fluid" id="emoji" data-toggle="popover" data-content="Hi! Welcome"/>
             <form id="formLogin" method="post" target="">
               <div class="form-group">
-                <label for="exampleInputEmail1">Usuário</label>
+                <label for="exampleInputEmail1">Username</label>
                 <input name="username" class="form-control" style="box-shadow: 1px 1px 3px #888888 ;" required>
-                <small id="emailHelp" class="form-text text-muted">Tente logar com o usuário: teste2</small>
+                <small id="emailHelp" class="form-text text-muted">For testing purposes, try logging in as: batman</small>
               </div>
               <div class="form-group">
-                <label for="exampleInputPassword1">Senha</label>
+                <label for="exampleInputPassword1">Password</label>
                 <input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="" style="box-shadow: 1px 1px 3px #888888 ;" required>
-                  <small id="emailHelp" class="form-text text-muted">Tente logar com a senha: 12345</small>
+                  <small id="emailHelp" class="form-text text-muted">Try logging in with the password 123456</small>
               </div>
               <button type="submit" id="botaoLogin" class="botaoForm btn btn-lg">Log in</button>
               <img id="loading" src="../ajax-loader.gif" style="display: none; margin-left: auto;  margin-right: auto; margin-top: 3%; width: 3%" />
             </form>
-            <a id="signup" data-toggle="modal" data-target="#exampleModal" href="_blank"><p id="crie">Ou então crie uma conta!</p></a>
+            <a id="signup" data-toggle="modal" data-target="#exampleModal" href="_blank"><p id="crie">Or create an account!</p></a>
         </div>
 
         <!-- Modal -->
@@ -68,18 +68,18 @@
       <div class="form-group">
         <label for="exampleInputEmail1" style="color: gray">E-mail:</label>
         <input type="email" class="form-control" id="exampleInputTextModal" aria-describedby="emailHelp" name="email_cadastro" placeholder="" style="box-shadow: 1px 1px 3px #888888 ;" required>
-        <label for="exampleInputEmail1" style="margin-top: 5%; color: gray">Usuário:</label>
+        <label for="exampleInputEmail1" style="margin-top: 5%; color: gray">Username:</label>
         <input type="text" class="form-control" id="exampleInputTextModal2" aria-describedby="emailHelp" placeholder="" name="user_cadastro" style="box-shadow: 1px 1px 3px #888888 ;" required>
-        <label for="exampleInputPassword1" style="margin-top: 5%; color: gray">Senha:</label>
+        <label for="exampleInputPassword1" style="margin-top: 5%; color: gray">Password:</label>
         <input type="password" class="form-control" id="exampleInputPassword1Modal" placeholder="" name="senha_cadastro" style="box-shadow: 1px 1px 3px #888888 ;" required>
         <input type="file" name="fileToUpload" id="inputUpload" style="display: none;">
         <p  style="margin-top: 5%; color: gray">Avatar:</p>
         <div class="row" style="margin-top: -5%">
-  <div class="col-md-6"><button class="btn" id="botaoImagem" style="height: 6%; width:80%; background-color: white !important;">Choose Image</button></div>
+  <div class="col-md-6"><button class="btn" id="botaoImagem" style="height: 50px; width:80%; background-color: white !important;">Choose Image</button></div>
   <!-- <div class="col-md-6" style="margin-left: -5%;"><input type="submit" value="Upload image" name="imagem" id="upImage" class="btn btn-lg botaoForm"  disabled style="height: 7%; width:100%;  font-size: 90%; background-color: white !important;"></div> -->
 </div>
       </div>
-      <button type="submit" id="botaoFormModal" class="btn btn-lg botaoForm" style="width:100%; margin-top: 20%; margin-bottom: 10%;">criar</button>
+      <button type="submit" id="botaoFormModal" class="btn btn-lg botaoForm" style="width:100%; margin-top: 20%; margin-bottom: 10%;">Create</button>
     </form>
               </div>
             </div>

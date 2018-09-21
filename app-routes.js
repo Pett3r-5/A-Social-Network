@@ -1,22 +1,26 @@
 const express = require('express')
-const bodyParser = require('body-parser')
-const passport = require('passport')
-const flash = require('connect-flash')
-const bcrypt = require('bcryptjs')
-const session = require('express-session')
-const path = require('path')
 const app = express()
-const mongoClient = require('mongodb').MongoClient
-let ObjectID = require('mongodb').ObjectID
-const multer = require('multer')
-const crypto = require('crypto')
-const util = require('util')
+const path = require('path')
+const bodyParser = require('body-parser')
 const hbs = require('hbs')
 var exphbs = require('express-handlebars')
 
-let upload = multer({ dest: 'user_images/' })
+const passport = require('passport')
+const flash = require('connect-flash')
+const session = require('express-session')
 const LocalStrategy = require('passport-local').Strategy
 
+const mongoClient = require('mongodb').MongoClient
+let ObjectID = require('mongodb').ObjectID
+const multer = require('multer')
+const bcrypt = require('bcryptjs')
+const crypto = require('crypto')
+const util = require('util')
+
+const getUser = require('./routes/get-user.js')
+const postHome = require('./routes/post-home.js')
+
+let upload = multer({ dest: 'user_images/' })
 app.set('view engine', 'html')
 app.engine('html', hbs.__express)
 app.set('view engine', 'handlebars')
@@ -114,128 +118,16 @@ app.get('/', (req, res) => {
   res.status(200).sendFile(path.join(__dirname, '/views/index.html'))
 })
 
+app.post('/home', upload.single('fileToUpload'), (req, res) => {
+  postHome.inserting(req, res)
+})
+
 app.post('/', passport.authenticate('local', { failureRedirect: '/nada', failureFlash: true }), (req, res) => {
   res.redirect(`/user:${req.user.nome}`) // esse user.id tá vindo do done(null, user) do localStrategy
 })
 
-app.get('/config:id', logadoOuNao, (req, res) => {
-  res.status(200).send('foi')
-})
-
-app.post('/home', upload.single('fileToUpload'), (req, res) => {
-  console.log('body: ' + JSON.stringify(req.body, undefined, 4))
-  // console.log('userCadastro: ' + JSON.parse(req, undefined, 4))
-  if (req.body.user_cadastro) {
-    let cadastro = {user: req.body.user_cadastro, email: req.body.email_cadastro, password: req.body.senha_cadastro, auth_token: req.body.user_cadastro, imagem: 'avatar.jpg'}
-    if (req.file) {
-      console.log('VAII ' + req.file.filename)
-      cadastro.imagem = req.file.filename
-      console.log('req.file.fileName ' + JSON.stringify(req.file, undefined, 4))
-    }
-    // if (!validator.isEmail(cadastro.email_cadastro)) {
-    //   res.send('email invalido')
-    // }
-    console.log('cadastro.imagem fora ' + cadastro.imagem)
-    bcrypt.genSalt(10, (err, salt) => {
-      if (err) {
-        console.log(err)
-      }
-      bcrypt.hash(cadastro.password, salt, (err, hash) => {
-        if (err) {
-          console.log(err)
-        }
-        cadastro.password = hash
-      })
-      bcrypt.hash(cadastro.auth_token, salt, (err, hash) => {
-        if (err) {
-          console.log(err)
-        }
-        cadastro.auth_token = hash
-      })
-    })
-    // cadastro.auth_token = jwt.sign(cadastro.user, 'galinha').toString()
-    mongoClient.connect('mongodb://localhost:27017/User', { useNewUrlParser: true }, (err, client) => {
-      if (err) console.log(`Não conseguiu se conectar ao servidor mongo: ${err}`)
-      const db = client.db('User')
-      db.collection('User').findOne({nome: cadastro.user}).then((docs) => {
-        console.log('docos: ' + docs)
-        if (docs === null) {
-          db.collection('User').insertOne({nome: cadastro.user, email: cadastro.email, password: cadastro.password, auth_token: cadastro.auth_token, imagem: cadastro.imagem, amigos_id: [], posts: []}).then((docs) => {
-            console.log('entrou ' + docs)
-            client.close()
-            res.redirect(`/`)
-          }, (err) => console.log('unable', err))
-        } else {
-          res.send('usuario já cadastrado')
-          client.close()
-        }
-      }).catch((err) => console.log(err))
-    })
-  }
-})
-
-app.get('/search', (req, res) => {
-  mongoClient.connect('mongodb://localhost:27017/User', { useNewUrlParser: true }, (err, client) => {
-    if (err) console.log(`Não conseguiu se conectar ao servidor mongo: ${err}`)
-    const db = client.db('User')
-    console.log('req.body.data ' + util.inspect(req._parsedOriginalUrl.query))
-    db.collection('User').find({nome: {$regex: '.*' + req._parsedOriginalUrl.query + '.*'}}).toArray().then((docs) => {
-      console.log('retorna usuario' + JSON.stringify(docs, undefined, 4))
-      res.status(200).json(docs)
-    }).catch((err) => console.log(err))
-  })
-})
-
 app.get('/user:usuario', logadoOuNao, (req, res) => {
-  mongoClient.connect('mongodb://localhost:27017/User', { useNewUrlParser: true }, (err, client) => {
-    if (err) console.log(`Não conseguiu se conectar ao servidor mongo: ${err}`)
-    const db = client.db('User')
-    let usuario = req.params.usuario.substring(req.params.usuario.indexOf(':') + 1, req.params.usuario.length)
-    console.log('aqui:::' + JSON.stringify(req.params, undefined, 4))
-    console.log('aqui:::' + req.params.usuario)
-    db.collection('User').findOne({nome: usuario}).then((docs) => {
-      if (docs !== null) {
-        db.collection('User').find({ amigos_id: {'$in': [docs._id]} }, { _id: { '$in': docs.amigos_id } }).toArray().then((docs2) => {
-          docs.amigos = []
-          if (docs2.length > 0) {
-            for (let i = 0; i < docs2.length; i++) {
-              docs.amigos[i] = { _id: docs2[i]._id, nome: docs2[i].nome, imagem: docs2[i].imagem }
-            }
-            console.log('retorna usuario doc2' + JSON.stringify(docs2, undefined, 4))
-          }
-          console.log('req.user._id' + typeof req.user._id)
-          console.log('docs._id' + docs._id)
-          docs.usuarioLogado = req.user
-          if (String(req.user._id) === String(docs._id)) {
-            db.collection('User').find({ $and: [ { amigos_id: {'$in': [docs._id]} }, { _id: { '$not': { '$in': docs.amigos_id } } } ] }).toArray().then((docs3) => {
-              console.log('self')
-              docs.amigosPendentes = []
-              if (docs3.length > 0) {
-                for (let i = 0; i < docs3.length; i++) {
-                  docs.amigosPendentes[i] = { _id: docs3[i]._id, nome: docs3[i].nome, imagem: docs3[i].imagem }
-                }
-              }
-              console.log('retorna usuario doc3' + JSON.stringify(docs, undefined, 4))
-              docs = JSON.stringify(docs)
-              docs = encodeURI(docs)
-              res.status(200).render(path.join(__dirname, '/views/home.hbs'), { 'usuario': docs })
-            }).catch((err) => console.log(err))
-          } else {
-            console.log('not-self')
-            if (String(req.user.amigos_id).indexOf(String(docs._id)) === -1 && String(docs.amigos_id).indexOf(String(req.user._id)) === -1) {
-              console.log('docs.amigos_id ' + typeof String(docs.amigos_id[1]))
-              console.log('req.user.amigos_id ' + req.user.amigos_id)
-              console.log('docs.amigos_id.indexOf(req.user._id) ' + docs.amigos_id.indexOf(req.user._id))
-              docs.adicionar = '<form id="postFriend" method="post" style="margin: auto"><button type="submit" form="postFriend" class="btn" id="botaoImagem" style="height: 50px; width:200px; background-color: rgb(250,200,200) !important;">Adicionar contato</button></form>'
-            }
-            docs = JSON.stringify(docs)
-            docs = encodeURI(docs)
-            res.status(200).render(path.join(__dirname, '/views/usuario.hbs'), { 'usuario': docs })
-          }
-        }).catch((err) => console.log(err))
-      }
-    }).catch((err) => console.log(err))
-  })
+  getUser.querying(req, res)
 })
 
 app.post('/user:usuario', logadoOuNao, (req, res) => {
@@ -261,5 +153,38 @@ app.post('/user:usuario', logadoOuNao, (req, res) => {
 //     db.collection('User').findOneAndUpdate({ _id: new ObjectID(req.user._id) }, {  })
 //   })
 // })
+
+app.get('/search', (req, res) => {
+  mongoClient.connect('mongodb://localhost:27017/User', { useNewUrlParser: true }, (err, client) => {
+    if (err) console.log(`Não conseguiu se conectar ao servidor mongo: ${err}`)
+    const db = client.db('User')
+    console.log('req.body.data ' + util.inspect(req._parsedOriginalUrl.query))
+    db.collection('User').find({nome: {$regex: '.*' + req._parsedOriginalUrl.query + '.*'}}).toArray().then((docs) => {
+      console.log('retorna usuario' + JSON.stringify(docs, undefined, 4))
+      res.status(200).json(docs)
+    }).catch((err) => console.log(err))
+  })
+})
+
+app.post('/newPost', (req, res) => {
+  mongoClient.connect('mongodb://localhost:27017/User', { useNewUrlParser: true }, (err, client) => {
+    console.log('entrou')
+    if (err) console.log(`Não conseguiu se conectar ao servidor mongo: ${err}`)
+    const db = client.db('User')
+    db.collection('User').findOneAndUpdate({_id: new ObjectID(req.user._id)}, {$push: { posts: req.body.post }}).then((doc) => res.status(200).redirect('/user:' + req.user.nome)).catch((err) => console.log(err))
+  })
+})
+
+// app.post('/edit-post', (req, res) => {
+//   mongoClient.connect('mongodb://localhost:27017/User', { useNewUrlParser: true }, (err, client) => {
+//     if (err) console.log(`Não conseguiu se conectar ao servidor mongo: ${err}`)
+//     const db = client.db('User')
+//     // db.collection('User').insertOne({_id: new ObjectID(req.user._id)}, )
+//   }).catch((err) => console.log(err))
+// })
+
+app.get('/config:id', logadoOuNao, (req, res) => {
+  res.status(200).send('foi')
+})
 
 app.listen(3001)
