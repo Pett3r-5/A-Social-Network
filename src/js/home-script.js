@@ -35,21 +35,19 @@ $(document).ready(function () {
 });
   $('.ui-menu-item-wrapper').click(function () {
     // window.location = url + '/user:' + $('#searching').val()
-    console.log('foi')
-    $('#procura').attr('href', url + '/user:' + $('#searching').val())
+    $('#procura').attr('href', url + '/users/user:' + $('#searching').val())
   })
   $('#procura').click(function (event) {
     event.preventDefault()
-    window.location = url + '/user:' + $('#searching').val()
+    window.location = url + '/users/user:' + $('#searching').val()
   })
   // document.getElementsByClassName('postFriend').onclick
   document.getElementById("searching").onkeyup = function (event) {
     var input = $('#searching').val()
-    console.log(input)
     $.ajax({
       type: 'GET',
       data: input,
-      url: url + '/search',
+      url: url + '/actions/search',
       success: function (data) {
         for (var i = 0; i < data.length; i++) {
           data[i] = data[i].nome
@@ -59,7 +57,7 @@ $(document).ready(function () {
           select: function (e, ui) {
             $('#procura').click(function (event) {
               event.preventDefault()
-              window.location = url + '/user:' + ui.item.value
+              window.location = url + '/users/user:' + ui.item.value
             })
           }
         // $('.ui-menu-item-wrapper').each(function (index) {

@@ -4,7 +4,7 @@
   "description": "![alt text](/sonnetprint.png)",
   "main": "express-routes.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon ./src/app.js"
   },
   "repository": {
     "type": "git",
@@ -22,8 +22,10 @@
     "formidable": "^1.2.1",
     "hbs": "^4.0.1",
     "mongodb": "^3.1.4",
+    "mongoose": "^5.3.13",
     "multer": "^1.3.1",
     "mysql": "^2.16.0",
+    "nodemon": "^1.18.6",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
