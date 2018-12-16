@@ -1,3 +1,4 @@
 passport.js
 express-routes.js
-node_modules
+API/node_modules
+view/node_modules

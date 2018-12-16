@@ -1,0 +1,190 @@
+#navbase {
+  background-color: rgb(228, 199, 255);
+  padding-left: 2%;
+  box-shadow: 3px 1px 3px #111111;
+  -webkit-transition: all 1s ease;
+  transition: all 1s ease;
+}
+.ui-front {
+    z-index: 9999999 !important;
+}
+
+#friends {
+  display: flex !important;
+  flex-direction: column !important;
+  flex-wrap: wrap !important;
+  height:600px;
+  min-width: 100%;
+}
+
+.footer {
+  position: fixed;
+  clear:both;
+}
+
+#navbarSupportedContent {
+  padding-bottom: 2%;
+  padding-top: 2%;
+  padding-right: 3%;
+  -webkit-transition: all 1s ease;
+  transition: all 1s ease;
+}
+
+#logo {
+  padding-left: 2%;
+  font-size: 300%;
+  color: rgba(250, 250, 250);
+  /* -webkit-transition-property: font-size; /* Safari */ */
+  -webkit-transition-duration: 1s; /* Safari */
+  /* transition-property: font-size; */
+  transition-duration: 1s;
+}
+
+#procura {
+  /* background-color: rgb(182, 106, 252); */
+  background-color: rgb(230, 240, 240);
+  box-shadow: 1px 1px 1px #888888;
+  color: rgb(10, 50, 100);
+  border: none;
+}
+
+#procura:hover {
+  background-color: rgb(200, 240, 240);
+}
+
+#procura:active{
+    box-shadow: 1px 1px 5px #888888 inset;
+    background-color: rgb(210, 290, 210);
+    color: rgb(0, 0, 0);
+}
+
+.blocos {
+  border-radius: 10px;
+  background-color: rgb(240, 230, 240);
+  box-shadow: 0px 1px 3px #111111;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-gap: 10px;
+}
+
+.balao {
+    margin-top: 3% !important;
+   font-size: 90%;
+   font-family: verdana;
+   color: rgb(90, 90, 90);
+}
+
+#botaoPost {
+  background-color: rgb(230, 240, 240);
+  box-shadow: 1px 1px 1px #888888 ;
+  color: rgb(10, 50, 100);
+  border: none;
+  display: table;
+  margin: 0 auto;
+}
+
+#botaoPost:hover{
+    background-color: rgb(200, 240, 240);
+}
+
+#botaoPost:active{
+    box-shadow: 1px 1px 5px #888888 inset;
+    background-color: rgb(210, 290, 210);
+    color: rgb(0, 0, 0);
+
+}
+
+.balaoFora {
+  width: 90%;
+  margin: 0 auto;
+}
+
+#photoPerfil {
+  height: 99%;
+  width: 99%;
+  border-radius: 50%;
+  /* background-image: url('../avatar.jpg'); */
+  background-size: 109%;
+  /* margin-left: 4%; */
+}
+
+#photoPerfil2 {
+  height: 400%;
+  width: 400%;
+  border-radius: 50%;
+  box-shadow: 3px 1px 3px #111111;
+  /* background-image: url('../avatar.jpg'); */
+  background-size: 100%;
+  /* margin-left: 4%; */
+}
+
+
+/* svg {
+  fill:none;
+  stroke:#8a3ab8;
+  stroke-width:3px;
+  stroke-dasharray:1;
+  stroke-dashoffset:0;
+  stroke-linecap:round;
+  animation:loading 4500ms ease-in-out infinite alternate;
+} */
+@keyframes loading {
+  100% {
+    stroke:#cd476b;
+    stroke-dasharray:10;
+    transform:rotate(200deg);
+  }
+}
+
+#drop {
+  height: 400%;
+  width: 400%;
+  border-bottom: 50%;
+  background-color: rgb(0,0,0);
+}
+
+.fade-in {
+	opacity: 1;
+	animation-name: fadeInOpacity;
+	animation-iteration-count: 1;
+	animation-timing-function: ease-in;
+	animation-duration: 0.7s;
+}
+
+@keyframes fadeInOpacity {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+#status {
+  position: absolute;
+  z-index: 2;
+}
+
+.balaoCima{
+  position: absolute;
+  z-index: 3;
+  display:block;
+  width:8%;
+  fill: rgb(240, 230, 240);
+}
+
+.balaoBaixo{
+  position: absolute;
+  z-index: 0;
+  display:block;
+  width:8%;
+  fill: rgb(240, 230, 240);
+  filter: drop-shadow(0px 1px 1px #111111);
+}
+
+/* path{
+  color: rgb(240, 230, 240);
+  box-shadow: 1px 1px 10px #888888;
+} */
