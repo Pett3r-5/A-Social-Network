@@ -2,6 +2,7 @@
   text-align: center;
   background-color: rgb(4, 4, 4);
   -webkit-animation:name 30s infinite;
+  /* height: 500px; */
 }
 
 .App-header {
@@ -19,54 +20,131 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
+/* @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
   to {
     transform: rotate(360deg);
   }
+} */
+
+.LoginBox{
+    -webkit-animation:name2 30s infinite !important;
+    background-color: rgb(250, 250, 250) !important;
+    height: 100% !important;
+    padding-bottom: 10%;
+    display: block;
+    /* align-items: center !important; */
+    /* justify-content: center !important; */
+    border-radius: 40px !important;
+    margin-top: 5% !important;
+    text-shadow: 3px 3px 3px 10px rgb(186, 86, 86) !important;
+    box-shadow: 1px 1px 5px #888888 !important;
 }
 
 
 #emoji{
-    display: table;
-    margin: auto;
-    padding-top: 10%;
-    height: 20%;
-    width: auto;
+    margin: auto !important;
+    padding-top: 10% !important;
+    height: 130px !important;
+}
+
+.shadowInput {
+  box-shadow: 1px 1px 3px #888888 !important;
 }
 
 
-.LoginBox{
-    -webkit-animation:name2 30s infinite;
-    background-color: rgb(250, 250, 250);
-    height: 70%;
-    width: 30%;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10%;
-    margin-top: 5%;
-    text-shadow: 3px 3px 3px 10px rgb(186, 86, 86);
-    box-shadow: 1px 1px 5px #888888;
-}
-
-@media (max-width: 1000px) {
-    .LoginBox{
-        width: 90%;
-    }
-
-
-}
-
-#formLogin{
-    padding-top: 5%;
-    width: 90%;
-    margin: 0 auto;
-    font-family: Kozuka light;
+.loginForm{
+    padding-top: 5% !important;
+    width: 90% !important;
+    margin: 0 auto !important;
+    font-family: Kozuka light !important;
 }
 
 @font-face {
     font-family: Kozuka light;
     src: url("./fonts/KozGoPr6N-ExtraLight.otf");
 }
+
+
+
+#loginDiv{
+    -webkit-animation:name2 30s infinite !important;
+    background-color: rgb(250, 250, 250) !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 10% !important;
+    margin-top: 5% !important;
+    text-shadow: 3px 3px 3px 10px rgb(186, 86, 86) !important;
+    box-shadow: 1px 1px 5px #888888 !important;
+}
+
+
+
+
+#botaoImagem {
+  background-color: rgb(230, 240, 240) !important;
+  box-shadow: 1px 1px 1px #888888 ;
+  color: rgb(10, 50, 100);
+  border: none;
+  display: table;
+  margin: 0 auto;
+  margin-top: 8%;
+  width: 50%;
+}
+
+#botaoImagem:hover{
+    background-color: rgb(200, 240, 240);
+}
+
+#botaoImagem:active{
+    box-shadow: 1px 1px 5px #888888 inset;
+    background-color: rgb(210, 290, 210);
+    color: rgb(0, 0, 0);
+
+}
+
+
+.botaoForm{
+    background-color: rgb(230, 240, 240) !important;
+    box-shadow: 1px 1px 1px #888888 !important;
+    color: rgb(10, 50, 100) !important;
+    border: none !important;
+    display: table !important;
+    margin: 0 auto !important;
+    margin-top: 8% !important;
+    width: 50% !important;
+}
+
+.botaoForm:hover{
+    background-color: rgb(200, 240, 240);
+}
+
+.botaoForm:active{
+    box-shadow: 1px 1px 5px #888888 inset;
+    background-color: rgb(210, 290, 210);
+    color: rgb(0, 0, 0);
+
+}
+
+#crie{
+    display: table !important;
+    margin: auto !important;
+    margin-top: 3% !important;
+}
+
+
+.modal-body {
+  background-color: rgb(242, 191, 255);
+    /* background-color: rgb(201, 153, 195); */
+  /* margin-right: -0.5;
+  margin-bottom: -0.5; */
+}
+
+
+
+/* .modal-header {
+  background-color: rgb(234, 147, 255);
+} */
