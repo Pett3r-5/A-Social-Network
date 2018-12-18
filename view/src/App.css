@@ -48,6 +48,7 @@
     margin: auto !important;
     padding-top: 10% !important;
     height: 130px !important;
+    width: auto;
 }
 
 .shadowInput {
@@ -114,18 +115,21 @@
     border: none !important;
     display: table !important;
     margin: 0 auto !important;
-    margin-top: 8% !important;
     width: 50% !important;
 }
 
+#botaoLogin {
+  margin-top: 8% !important;
+}
+
 .botaoForm:hover{
-    background-color: rgb(200, 240, 240);
+    background-color: rgb(200, 240, 240) !important;
 }
 
 .botaoForm:active{
-    box-shadow: 1px 1px 5px #888888 inset;
-    background-color: rgb(210, 290, 210);
-    color: rgb(0, 0, 0);
+    box-shadow: 1px 1px 5px #888888 inset !important;
+    background-color: rgb(210, 290, 210) !important;
+    color: rgb(0, 0, 0) !important;
 
 }
 

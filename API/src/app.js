@@ -60,6 +60,7 @@ passport.use(new LocalStrategy( // o filtro de buscar o usuario no banco de dado
     mongoClient.connect('mongodb://localhost:27017/User', { useNewUrlParser: true }, (err, client) => {
       if (err) console.log(`Não conseguiu se conectar ao servidor mongo: ${err}`)
       const db = client.db('User')
+      console.log(username);
       db.collection('User').findOne({nome: username}).then((docs) => {
         if (docs === null) {
           console.log('usuario nao achado: ' + err)
@@ -74,6 +75,7 @@ passport.use(new LocalStrategy( // o filtro de buscar o usuario no banco de dado
               client.close()
               return done(null, false)
             } else {
+              console.log('entrou');
               let user = docs
               client.close()
               return done(null, user)
