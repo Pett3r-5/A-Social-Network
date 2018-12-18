@@ -6,49 +6,117 @@ import { Row, Col, Form, FormGroup, Input, Label, FormFeedback, FormText, Button
 import './App.css';
 
 
+
+
+function LoginInput(props){
+  return(
+    <FormGroup>
+      <Label for={props.tipo.name} style={{textAlign: 'left !important'}}>{props.tipo.title}</Label>
+      <Input onChange={props.handleChange}
+            value={props.value}
+            type={props.tipo.type}
+            name={props.tipo.name}
+            id={props.tipo.name}
+            className="shadowInput"
+            required />
+      <FormText className="text-muted">{props.tipo.text}</FormText>
+      <FormFeedback invalid>Invalid {props.tipo.name}</FormFeedback>
+    </FormGroup>
+  )
+}
+
 class ModalCreateAccount extends Component {
+  constructor(props){
+    super(props)
+    this.state = {modal: false}
+    this.toggle = this.toggle.bind(this)
+    this.state = {email: ''}
+    this.state = {password: ''}
+    this.state = {username: ''}
+  }
+
+  componentDidMount(){
+    this.setState({modal: true})
+    this.setState({email: {value: '', name: 'email', title: 'email', text:'', type: 'email'}})
+    this.setState({password: {value: '', name: 'password', title: 'Password', text:'', type: 'password'}})
+    this.setState({username: {value: '', name: 'username', title: 'Username', text: '', type: 'text'}})
+  }
+
+  toggle() {
+    this.setState({
+      modal: !this.state.modal
+    });
+  }
+
+  handleChange(event){
+    let tipo = event.target.name
+    this.setState({[tipo]: {...this.state[tipo], value: event.target.value}})
+  }
+
+  handleSubmit(event){
+    
+  }
+
   render(){
-    return(
-      <div>
-        <Button color="danger" onClick={this.toggle}>{this.props.buttonLabel}</Button>
-        <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
-          <ModalHeader toggle={this.toggle}>Modal title</ModalHeader>
-          <ModalBody>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-          </ModalBody>
-          <ModalFooter>
-            <Button color="primary" onClick={this.toggle}>Do Something</Button>{' '}
-            <Button color="secondary" onClick={this.toggle}>Cancel</Button>
-          </ModalFooter>
-        </Modal>
-      </div>
-    )
+    if(this.state.username){
+      return(
+        <div>
+          <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
+            <ModalHeader toggle={this.toggle}>Sign up</ModalHeader>
+            <ModalBody>
+              <LoginInput handleChange={this.handleChange} value={this.state.email.value} tipo={this.state.email}/>
+              <LoginInput handleChange={this.handleChange} value={this.state.username.value} tipo={this.state.username}/>
+              <LoginInput handleChange={this.handleChange} value={this.state.password.value} tipo={this.state.password}/>
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" onClick={this.toggle}>Do Something</Button>{' '}
+              <Button color="secondary" onClick={this.toggle}>Cancel</Button>
+            </ModalFooter>
+          </Modal>
+        </div>
+      )
+    }
+    return null
   }
 }
 
 class FormLogin extends Component {
+  constructor(props){
+    super(props)
+    this.state = {value: ''}
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.state = {username: {value:''}}
+    this.state = {password: {value:''}}
+  }
+
+  componentDidMount(){
+    this.setState({username: {value: '', name: 'username', title: 'Username', text: 'For testing purposes, try logging in as: batman', type: 'text'}})
+    this.setState({password: {value: '', name: 'password', title: 'Password', text:'Try logging in with the password 123456', type: 'password'}})
+  }
+
+  handleChange(event){
+    let tipo = event.target.name
+    this.setState({[tipo]: {...this.state[tipo], value: event.target.value}})
+  }
+
+  handleSubmit(event){
+    event.preventDefault()
+  }
 
   render(){
-    return(
+    if(this.state.username){
+      return(
+            <Form className="loginForm" onSubmit={this.handleSubmit}>
+              <LoginInput handleChange={this.handleChange} value={this.state.username.value} tipo={this.state.username}/>
+              <LoginInput handleChange={this.handleChange} value={this.state.password.value} tipo={this.state.password}/>
+              <Button type="submit" className="botaoForm" id="botaoLogin">Log in</Button>
+              <a id="signup" onClick={this.props.openModal} href="javascript:void(0)"><p id="crie">Or create an account!</p></a>
+            </Form>
 
-          <Form className="loginForm">
-            <FormGroup>
-              <Label for="username" style={{textAlign: 'left !important'}}>Username</Label>
-              <Input type="text" name="username" id="username" className="shadowInput" required />
-              <FormText id="userHelp" className="text-muted">For testing purposes, try logging in as: batman</FormText>
-              <FormFeedback invalid>Invalid username</FormFeedback>
-            </FormGroup>
-            <FormGroup>
-              <Label for="exampleInputPassword1">Password</Label>
-              <Input type="password" id="exampleInputPassword1" name="password" className="shadowInput" placeholder="" required />
-              <FormText id="passwordHelp" className="text-muted">Try logging in with the password 123456</FormText>
-              <FormFeedback invalid>Invalid password</FormFeedback>
-            </FormGroup>
-            <Button className="botaoForm" id="botaoLogin">Log in</Button>
-            <a id="signup" onClick={this.props.openModal} href="_blank"><p id="crie">Or create an account!</p></a>
-          </Form>
-
-    )
+      )
+    }
+    return null
   }
 }
 
@@ -59,14 +127,12 @@ class LoginBox extends Component {
     this.state = {modalOpened: false}
     this.openModal = this.openModal.bind(this)
   }
-  componentDidMount(){
-    this.setState({modalOpened: false})
-  }
 
   openModal(){
     console.log('entrou');
-    this.setState({modalOpened: !this.state.modalOpened})
     console.log(this.state.modalOpened);
+    this.setState({modalOpened: !this.state.modalOpened})
+
   }
 
   render(){
