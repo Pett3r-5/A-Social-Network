@@ -12,6 +12,8 @@ exports.postIndex = (req, res) => {
 }
 
 exports.postHome = async (req, res) => {
+  console.log(req.body);
+  console.log(req.file);
   if (req.body.user_cadastro) {
     let cadastro = {user: req.body.user_cadastro, email: req.body.email_cadastro, password: req.body.senha_cadastro, imagem: 'avatar.jpg'}
     if (req.file) {
@@ -31,7 +33,7 @@ exports.postHome = async (req, res) => {
         try {
           docs = await User.findOne({nome: cadastro.user})
           if (docs === null) {
-            docs2 = await User.insertOne({nome: cadastro.user, email: cadastro.email, password: cadastro.password, imagem: cadastro.imagem, amigos_id: [], posts: []})
+            docs2 = await User.create({nome: cadastro.user, email: cadastro.email, password: cadastro.password, imagem: cadastro.imagem, amigos_id: [], posts: []})
             res.redirect(`/`)
           } else {
             res.send('usuario já cadastrado')

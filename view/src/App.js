@@ -1,14 +1,29 @@
 import React, { Component } from 'react';
-import './App.css';
-import LoginBox from './login'
+import './css/App.css';
+import LoginBox from './login/login'
+import User from './user/user'
+
+
 
 class App extends Component {
+  constructor(props){
+    super(props)
+    this.state = {pg: false}
+  }
+
   render() {
+    if(this.state.pg){
+      return (
+        <div className="App">
+          <LoginBox />
+        </div>
+      );
+    }
     return (
-      <div className="App">
-        <LoginBox />
+      <div className="App" style={{backgroundColor: 'rgb(250,250,250)'}}>
+        <User />
       </div>
-    );
+    )
   }
 }
 

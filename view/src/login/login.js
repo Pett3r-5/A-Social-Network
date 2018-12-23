@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import emojiHi from './images/emojiHi.png';
+import emojiHi from '../images/emojiHi.png';
 import 'bootstrap/dist/css/bootstrap.css';
 import { Row, Col, Form, FormGroup, Input, Label, FormFeedback, FormText, Button,
           Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import './App.css';
+import '../css/App.css';
 
 
 
@@ -16,7 +16,7 @@ function LoginInput(props){
             value={props.value}
             type={props.tipo.type}
             name={props.tipo.name}
-            id={props.tipo.name}
+            id={props.tipo.id}
             className="shadowInput"
             required />
       <FormText className="text-muted">{props.tipo.text}</FormText>
@@ -39,7 +39,7 @@ class UploadImage extends Component{
     return (
       <Row>
         <Col md={{size:6}}>
-          <input type="file" name="fileToUpload" id="inputUpload" style={{display: 'none'}} />
+          <input name="fileToUpload" id="inputUpload" style={{display: 'none'}} onChange={this.props.handlePictureUpload} type={this.props.tipo.type} />
           <Label htmlFor="botaoImagem">Avatar</Label>
           <Button onClick={this.uploadImage} id="botaoImagem" style={{marginTop: '0%', height: 50, width:'80%', backgroundColor: 'white !important'}}>Choose Image</Button>
         </Col>
@@ -49,25 +49,40 @@ class UploadImage extends Component{
 }
 
 
+function ModalsBody ({register, handleChange, handlePictureUpload}) {
+  return (
+    <ModalBody>
+      <LoginInput handleChange={handleChange} value={register.email.value} tipo={register.email}/>
+      <LoginInput handleChange={handleChange} value={register.username.value} tipo={register.username}/>
+      <LoginInput handleChange={handleChange} value={register.password.value} tipo={register.password}/>
+      <UploadImage handlePictureUpload={handlePictureUpload} tipo={register.fileToUpload} />
+    </ModalBody>
+  )
+}
+
+function ModalsFooter({toggle, handleSubmit}){
+  return (
+    <ModalFooter>
+      <Button id="botaoFormModal" className="botaoForm" style={{width:'100%'}} onClick={toggle, handleSubmit}>Create</Button>
+    </ModalFooter>
+  )
+}
 
 
 class ModalCreateAccount extends Component {
   constructor(props){
     super(props)
-    this.state = {modal: false}
+    this.state = {
+      email: {value: '', id: 'emailModal', name: 'email', title: 'email', text:'', type: 'email'},
+      password: {value: '', id:'passwordModal', name: 'password', title: 'Password', text:'', type: 'password'},
+      username: {value: '', id: 'usernameModal', name: 'username', title: 'Username', text: '', type: 'text'},
+      fileToUpload: {value: '', id: 'fileModal', name: 'fileToUpload', title: 'file', text: '', type: 'file'},
+      modal: true
+    }
     this.toggle = this.toggle.bind(this)
-    this.state = {email: ''}
-    this.state = {password: ''}
-    this.state = {username: ''}
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
-  }
-
-  componentDidMount(){
-    this.setState({modal: true})
-    this.setState({email: {value: '', name: 'email', title: 'email', text:'', type: 'email'}})
-    this.setState({password: {value: '', name: 'password', title: 'Password', text:'', type: 'password'}})
-    this.setState({username: {value: '', name: 'username', title: 'Username', text: '', type: 'text'}})
+    this.handlePictureUpload = this.handlePictureUpload.bind(this)
   }
 
   toggle() {
@@ -81,54 +96,55 @@ class ModalCreateAccount extends Component {
     this.setState({[tipo]: {...this.state[tipo], value: event.target.value}})
   }
 
+  handlePictureUpload(event){
+    console.log(event.target);
+    console.log(event.target.files[0]);
+    this.setState({fileToUpload: {...this.state.fileToUpload, value: event.target.files[0]}})
+  }
+
   handleSubmit(event){
     event.preventDefault()
+    let corpo = {
+      email:this.state.email.value,
+      user_cadastro: this.state.username.value,
+      senha_cadastro: this.state.password.value,
+      fileToUpload: this.state.fileToUpload.value
+    }
+    console.log(corpo);
     fetch('http://localhost:3001/home',
     {
       method: 'POST',
        headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'},
-      body: JSON.stringify({email:this.state.email.value, user_cadastro: this.state.username.value, senha_cadastro: this.state.password.value})
+      body: JSON.stringify(corpo),
+      file: this.state.fileToUpload.value
     }).then(res=>console.log(res)).catch(error=>console.log(error))
   }
 
   render(){
-    if(this.state.username){
-      return(
-        <div>
-          <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
-            <ModalHeader toggle={this.toggle}>Sign up</ModalHeader>
-            <ModalBody>
-              <LoginInput handleChange={this.handleChange} value={this.state.email.value} tipo={this.state.email}/>
-              <LoginInput handleChange={this.handleChange} value={this.state.username.value} tipo={this.state.username}/>
-              <LoginInput handleChange={this.handleChange} value={this.state.password.value} tipo={this.state.password}/>
-              <UploadImage />
-            </ModalBody>
-            <ModalFooter>
-              <Button id="botaoFormModal" className="botaoForm" style={{width:'100%'}} onClick={this.toggle, this.handleSubmit}>Create</Button>
-            </ModalFooter>
-          </Modal>
-        </div>
-      )
-    }
-    return null
+    return(
+      <div>
+        <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
+          <ModalHeader toggle={this.toggle}>Sign up</ModalHeader>
+          <ModalsBody handleChange={this.handleChange} register={this.state} handlePictureUpload={this.handlePictureUpload}/>
+          <ModalsFooter handleSubmit={this.handleSubmit} toggle={this.toggle} />
+        </Modal>
+      </div>
+    )
   }
 }
 
 class FormLogin extends Component {
   constructor(props){
     super(props)
-    this.state = {value: ''}
+    this.state = {
+      value: '',
+      username: {value: '', id:'username', name: 'username', title: 'Username', text: 'For testing purposes, try logging in as: batman', type: 'text'},
+      password: {value: '',  id:'password', name: 'password', title: 'Password', text:'Try logging in with the password 123456', type: 'password'}
+    }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
-    this.state = {username: {value:''}}
-    this.state = {password: {value:''}}
-  }
-
-  componentDidMount(){
-    this.setState({username: {value: '', name: 'username', title: 'Username', text: 'For testing purposes, try logging in as: batman', type: 'text'}})
-    this.setState({password: {value: '', name: 'password', title: 'Password', text:'Try logging in with the password 123456', type: 'password'}})
   }
 
   handleChange(event){
@@ -149,7 +165,6 @@ class FormLogin extends Component {
   }
 
   render(){
-    if(this.state.username){
       return(
             <Form className="loginForm" onSubmit={this.handleSubmit}>
               <LoginInput handleChange={this.handleChange} value={this.state.username.value} tipo={this.state.username}/>
@@ -157,10 +172,7 @@ class FormLogin extends Component {
               <Button type="submit" className="botaoForm" id="botaoLogin">Log in</Button>
               <a id="signup" onClick={this.props.openModal} href="javascript:void(0)"><p id="crie">Or create an account!</p></a>
             </Form>
-
       )
-    }
-    return null
   }
 }
 
@@ -173,14 +185,10 @@ class LoginBox extends Component {
   }
 
   openModal(){
-    console.log('entrou');
-    console.log(this.state.modalOpened);
     this.setState({modalOpened: !this.state.modalOpened})
-
   }
 
   render(){
-    console.log(this.state.modalOpened);
     return (
       <Row>
         <Col md={{size:4, offset:4}} sm={{size:8, offset:2}} xs={{size:10, offset:1}}>
