@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import '../css/user.css';
-import { Container, Navbar, NavbarBrand, Row, Col, Form, FormGroup, Input, Label, FormFeedback, FormText, Button } from 'reactstrap';
+import { Container, Row, Col } from 'reactstrap';
 
 class UserFooter extends Component{
   render() {
