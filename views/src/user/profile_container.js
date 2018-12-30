@@ -4,8 +4,8 @@ import add_post from '../store/actions/post_add'
 
 const mapStateToProps = (state) => ({
   profile: {
-    username: state.loggedin.user_logged.username,
-    image: state.loggedin.user_logged.image
+    username: state.loggedin.username,
+    image: state.loggedin.image
   }
 })
 

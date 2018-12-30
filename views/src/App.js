@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './css/App.css';
-import LoginBox from './login/login'
+import LoginBox from './index/login/login'
 import User from './user/user'
 
 
@@ -8,7 +8,7 @@ import User from './user/user'
 class App extends Component {
   constructor(props){
     super(props)
-    this.state = {pg: false}
+    this.state = {pg: true}
   }
 
   render() {

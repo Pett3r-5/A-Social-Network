@@ -19,9 +19,13 @@
 
 .footing {
   position: relative;
-  bottom: 0;
+  bottom: 0 !important;
   left: 0;
-  clear:both;
+  background-color: rgb(249, 95, 249);
+  min-height:100%;
+  height: 300;
+  margin-top: 5%;
+  padding-bottom: 3%;
 }
 
 #navbarSupportedContent {
@@ -104,14 +108,7 @@
   margin: 0 auto;
 }
 
-#photoPerfil {
-  height: 99%;
-  width: 99%;
-  border-radius: 50%;
-  /* background-image: url('../avatar.jpg'); */
-  background-size: 109%;
-  /* margin-left: 4%; */
-}
+
 
 #photoPerfil2 {
   height: 400%;
@@ -169,7 +166,7 @@
   z-index: 2;
 }
 
-.balaoCima{
+.balaoCima {
   position: absolute;
   z-index: 3;
   display:block;
@@ -177,7 +174,7 @@
   fill: rgb(240, 230, 240);
 }
 
-.balaoBaixo{
+.balaoBaixo {
   position: absolute;
   z-index: 0;
   display:block;
@@ -190,3 +187,72 @@
   color: rgb(240, 230, 240);
   box-shadow: 1px 1px 10px #888888;
 } */
+
+
+
+
+/* ------------------conteudo balao: */
+
+#wallLabel {
+  text-align: center;
+  padding: 3%;
+  margin-top: 8%;
+  background-color: rgb(200, 190, 200);
+}
+
+#txtarea {
+  min-height: 100px;
+  background-color: rgb(240, 230, 240);
+  border: 2px solid white;
+  border-radius: 5px;
+}
+
+#botaoPost {
+  height: 50px !important;
+  background-color: rgb(220, 230, 240) !important;
+  margin-top: 15px !important;
+}
+
+/* ------------------fim conteudo balao */
+
+
+
+
+
+
+/* ------------------informacoes de perfil: */
+
+#photoPerfil {
+  height: 99%;
+  width: 99%;
+  border-radius: 50px;
+  background-size: 109%;
+  /* background-image: url('../avatar.jpg'); */
+}
+
+#profilePicture {
+  margin: auto;
+  height: 100px;
+  width: 100px;
+}
+
+#profileName {
+   text-align: center;
+   margin-top: 7%;
+   font-size: 120%;
+}
+
+.lineSeparator {
+  margin: auto;
+  height: 1px;
+  background-color: lightgrey;
+  margin-top: -5%;
+}
+
+#onlineStatus {
+  font-size: 90%;
+  text-align: center;
+  margin-top: 5%;
+}
+
+/* ------------------fim informacoes de perfil */
