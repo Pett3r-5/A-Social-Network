@@ -27,17 +27,19 @@ exports.get = async (req, res) => {
             user.amigosPendentes[i] = { _id: amigosPendentes[i]._id, nome: amigosPendentes[i].nome, imagem: amigosPendentes[i].imagem }
           }
         }
-        user = JSON.stringify(user)
-        user = encodeURI(user)
-        return res.status(200).render(path.join(__dirname, '../views/home.hbs'), { 'usuario': user })
+        // user = JSON.stringify(user)
+        // user = encodeURI(user)
+        // return res.status(200).render(path.join(__dirname, '../views/home.hbs'), { 'usuario': user })
+        return res.status(200).send(user)
       } else {
         // console.log('not-self')
-        if (String(req.user.amigos_id).indexOf(String(user._id)) === -1 && String(user.amigos_id).indexOf(String(req.user._id)) === -1) {
-          user.adicionar = '<form id="postFriend" method="post" style="margin: auto"><button type="submit" form="postFriend" class="btn" id="botaoImagem" style="height: 50px; width:200px; background-color: rgb(250,200,200) !important;">Adicionar contato</button></form>'
-        }
-        user = JSON.stringify(user)
-        user = encodeURI(user)
-        return res.status(200).render(path.join(__dirname, '../views/user.hbs'), { 'usuario': user })
+        // if (String(req.user.amigos_id).indexOf(String(user._id)) === -1 && String(user.amigos_id).indexOf(String(req.user._id)) === -1) {
+        //   user.adicionar = '<form id="postFriend" method="post" style="margin: auto"><button type="submit" form="postFriend" class="btn" id="botaoImagem" style="height: 50px; width:200px; background-color: rgb(250,200,200) !important;">Adicionar contato</button></form>'
+        // }
+        // user = JSON.stringify(user)
+        // user = encodeURI(user)
+        // return res.status(200).render(path.join(__dirname, '../views/user.hbs'), { 'usuario': user })
+        return res.status(200).send(user)
       }
     } else {
       res.status(500).send('nenhum registro de usuário encontrado')

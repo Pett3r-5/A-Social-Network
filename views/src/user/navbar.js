@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import '../css/user.css';
-import { Navbar, Nav, NavbarBrand, Row, NavLink, Col, Form, Collapse, Input, Label, FormFeedback, NavItem, Button } from 'reactstrap';
-import NavBar from './navbar.js'
+import { Navbar, Nav, NavbarBrand, NavLink, Form, Collapse, Input, NavItem, Button } from 'reactstrap';
+
 
 
 class Search extends Component {

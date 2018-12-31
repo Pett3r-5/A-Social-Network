@@ -3,7 +3,7 @@ import PostBox from './PostBox'
 import add_post from '../../store/actions/post_add'
 
 const mapStateToProps = (state) => ({
-  posts: state.loggedin.posts
+  post: state.loggedin.posts[0]
 })
 
 const mapDispatchToProps = (dispatch) => ({

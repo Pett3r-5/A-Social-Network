@@ -8,6 +8,7 @@ const session = require('express-session')
 const path = require('path')
 const app = express()
 const formidable = require('formidable')
+const mongoClient = require('mongodb').MongoClient
 
 const LocalStrategy = require('passport-local').Strategy
 
@@ -156,5 +157,41 @@ app.post('/home', (req, res) => {
     })
   }
 })
+
+passport.use(new LocalStrategy( // o filtro de buscar o usuario no banco de dados.
+  function (username, password, done) {
+    mongoClient.connect('mongodb://localhost:27017/User', { useNewUrlParser: true }, (err, client) => {
+      if (err) console.log(`Não conseguiu se conectar ao servidor mongo: ${err}`)
+      const db = client.db('User')
+      console.log(username);
+      db.collection('User').findOne({nome: username}).then((docs) => {
+        if (docs === null) {
+          console.log('usuario nao achado: ' + err)
+          client.close()
+          return done(null, false)
+        } else {
+          bcrypt.compare(password, docs.password, (err, resul) => {
+            if (err) {
+              console.log(err)
+            }
+            if (resul === false) {
+              client.close()
+              return done(null, false)
+            } else {
+              console.log('entrou');
+              let user = docs
+              client.close()
+              return done(null, user)
+            }
+          })
+        }
+      }, (err) => {
+        console.log('usuario nao achado: ' + err)
+        client.close()
+        return done(null, false)
+      })
+    })
+  })
+)
 
 app.listen(3001)

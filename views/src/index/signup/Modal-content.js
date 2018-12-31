@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
-import { Row, Col, Form, Label, Button, ModalBody, ModalFooter } from 'reactstrap';
+import { Row, Col, Label, Button, ModalBody, ModalFooter } from 'reactstrap';
 import '../../css/App.css';
 
 import LoginInput from '../Login-input'

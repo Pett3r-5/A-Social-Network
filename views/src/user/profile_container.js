@@ -1,18 +1,13 @@
 import { connect } from 'react-redux'
 import Profile from './profile'
-import add_post from '../store/actions/post_add'
 
 const mapStateToProps = (state) => ({
   profile: {
-    username: state.loggedin.username,
-    image: state.loggedin.image
+    nome: state.loggedin.nome,
+    imagem: state.loggedin.imagem
   }
 })
 
-const mapDispatchToProps = (dispatch) => ({
-  add_post: (post) => {  dispatch(add_post(post)) }
-})
-
-const ProfileContainer = connect(mapStateToProps, mapDispatchToProps)(Profile)
+const ProfileContainer = connect(mapStateToProps)(Profile)
 
 export default ProfileContainer

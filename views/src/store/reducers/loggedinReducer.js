@@ -10,6 +10,10 @@ const init = {
 //daí se algum dado for atualizado, ele tem que ser pegado de novo
 
 const loggedInReducer = (state=init, action) => {
+  if(action.type === 'POPULATE_LOGGED_USER'){
+      return action.content
+  }
+
   if(action.type === 'NEW_POST') {
     return {
             ...state, //isso aqui eh o resto do state: username, image, friends.

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import '../css/user.css';
-import { Container, Row, Col } from 'reactstrap';
+import { Container, Col } from 'reactstrap';
 
 
 

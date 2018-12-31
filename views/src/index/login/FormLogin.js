@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import emojiHi from '../../images/emojiHi.png';
+import { withRouter } from 'react-router-dom';
+
 import 'bootstrap/dist/css/bootstrap.css';
-import { Row, Col, Form, Button } from 'reactstrap';
+import { Form, Button } from 'reactstrap';
 import '../../css/App.css';
 
 import LoginInput from '../Login-input';
-import ModalCreateAccount from '../signup/Modal-create-account'
 
 
 function SignupLink({openModal}){
@@ -23,6 +23,8 @@ class FormLogin extends Component {
   constructor(props){
     super(props)
     this.state = {
+      user: {},
+      authorized: '',
       value: '',
       username: {value: '', id:'username', name: 'username', title: 'Username', text: 'For testing purposes, try logging in as: batman', type: 'text'},
       password: {value: '',  id:'password', name: 'password', title: 'Password', text:'Try logging in with the password 123456', type: 'password'}
@@ -41,11 +43,21 @@ class FormLogin extends Component {
     fetch('http://localhost:3001',
     {
       method: 'POST',
-       headers: {
+      headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'},
       body: JSON.stringify({username: this.state.username.value, password: this.state.password.value})
-    }).then(res=>console.log(res)).catch(error=>console.log(error))
+    }).then(res=> res.json()).then((result)=> {
+      console.log('aqui');
+      console.log(result)
+      if(result) {
+        this.setState({authorized: true})
+        this.props.populate_user(result)
+        this.props.history.push(`/user/${result._id}`)
+      }
+    }).catch((error)=> {
+      this.props.history.push(`/unauthorized`)
+    })
   }
 
   render(){
@@ -60,37 +72,4 @@ class FormLogin extends Component {
   }
 }
 
-
-class LoginBox extends Component {
-  constructor(props){
-    super(props)
-    this.state = {modalOpened: false}
-    this.openModal = this.openModal.bind(this)
-  }
-
-  openModal(){
-    this.setState({modalOpened: !this.state.modalOpened})
-  }
-
-  render(){
-    return (
-      <Row>
-        <Col md={{size:4, offset:4}} sm={{size:8, offset:2}} xs={{size:10, offset:1}}>
-          <div style={{padding:20}}>
-            <div className="LoginBox" >
-              <img id="emoji" src={emojiHi} />
-              <FormLogin openModal={this.openModal}/>
-            </div>
-          </div>
-          {this.state.modalOpened? <ModalCreateAccount /> : null}
-        </Col>
-      </Row>
-    )
-  }
-}
-
-
-
-
-
-export default LoginBox
+export default withRouter(FormLogin)

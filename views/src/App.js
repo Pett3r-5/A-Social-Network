@@ -1,29 +1,26 @@
 import React, { Component } from 'react';
+import { BrowserRouter, Route } from 'react-router-dom'
+
 import './css/App.css';
-import LoginBox from './index/login/login'
+
+import LoginBox from './index/login/LoginBox'
 import User from './user/user'
 
 
 
 class App extends Component {
-  constructor(props){
-    super(props)
-    this.state = {pg: false}
-  }
 
   render() {
-    if(this.state.pg){
-      return (
-        <div className="App">
-          <LoginBox />
-        </div>
-      );
-    }
     return (
-      <div className="App" style={{backgroundColor: 'rgb(250,250,250)'}}>
-        <User />
+      <div className="App">
+        <BrowserRouter>
+          <div>
+            <Route exact path="/" component={LoginBox} />
+            <Route exact path="/user/:id" component={User} />
+          </div>
+        </BrowserRouter>
       </div>
-    )
+    );
   }
 }
 

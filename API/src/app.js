@@ -38,11 +38,12 @@ app.use((req, res, next)=> {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, x-access-token');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
     next();
 });
 
+// app.all("*", logadoOuNao)
 
-const mongoClient = require('mongodb').MongoClient
 mongoose.connect('mongodb://localhost:27017/User');
 const User = require('./models/user')
 // bcrypt.genSalt(10, (err, salt) => {
@@ -50,43 +51,45 @@ const User = require('./models/user')
 //   app.use(session({ secret: salt, resave: true, saveUninitialized: true })) // If your application uses persistent login sessions, passport.session() middleware must also be used.
 // })
 let salt = bcrypt.genSaltSync(10)
-app.use(session({ secret: salt, resave: true, saveUninitialized: true }))
+app.use(session({
+  secret: salt,
+  resave: true,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    SameSite: 'strict',
+    secure: true
+  }
+}))
+
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(flash()) // flash eh a mensagem padrao de erro ou sucesso de login do passport
 
 passport.use(new LocalStrategy( // o filtro de buscar o usuario no banco de dados.
-  function (username, password, done) {
-    mongoClient.connect('mongodb://localhost:27017/User', { useNewUrlParser: true }, (err, client) => {
-      if (err) console.log(`Não conseguiu se conectar ao servidor mongo: ${err}`)
-      const db = client.db('User')
-      console.log(username);
-      db.collection('User').findOne({nome: username}).then((docs) => {
-        if (docs === null) {
-          console.log('usuario nao achado: ' + err)
-          client.close()
-          return done(null, false)
-        } else {
-          bcrypt.compare(password, docs.password, (err, resul) => {
-            if (err) {
-              console.log(err)
-            }
-            if (resul === false) {
-              client.close()
-              return done(null, false)
-            } else {
-              console.log('entrou');
-              let user = docs
-              client.close()
-              return done(null, user)
-            }
-          })
-        }
-      }, (err) => {
+function (username, password, done) {
+    console.log(username);
+    User.findOne({nome: username}).then((docs) => {
+      if (docs === null) {
         console.log('usuario nao achado: ' + err)
-        client.close()
         return done(null, false)
-      })
+      } else {
+        bcrypt.compare(password, docs.password, (err, resul) => {
+          if (err) {
+            console.log(err)
+          }
+          if (resul === false) {
+            return done(null, false)
+          } else {
+            console.log('entrou');
+            let user = docs
+            return done(null, user)
+          }
+        })
+      }
+    }, (err) => {
+      console.log('usuario nao achado: ' + err)
+      return done(null, false)
     })
   })
 )
@@ -96,15 +99,10 @@ passport.serializeUser(function (user, done) {
 })
 
 passport.deserializeUser(function (id, done) {
-  mongoClient.connect('mongodb://localhost:27017/User', { useNewUrlParser: true }, (err, client) => {
-    if (err) console.log(`Não conseguiu se conectar ao servidor mongo: ${err}`)
-    const db = client.db('User')
-    db.collection('User').findOne({_id: new ObjectID(id)}).then((docs) => {
-      let user = docs
-      client.close()
-      done(err, user)
-    }).catch((err) => console.log(err))
-  })
+  User.findOne({_id: new ObjectID(id)}).then((docs) => {
+    let user = docs
+    done(err, user)
+  }).catch((err) => console.log(err))
 })
 
 app.use('/', indexRoutes)

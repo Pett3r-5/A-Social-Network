@@ -9,10 +9,7 @@ import Bubbles from './post-baloon/Bubbles'
 import PreviousPost from './post-baloon/Previous-post'
 import Friends from './Friends'
 
-class UserBody extends Component{
-  constructor(props){
-    super(props)
-  }
+class UserBody extends Component {
 
   render() {
     return (
@@ -22,7 +19,7 @@ class UserBody extends Component{
             <ProfileContainer />
             <Post />
           </Row>
-          {this.props.posts.map(e=> <><Bubbles /><PreviousPost text={e}/></>)}
+          {this.props.posts.map(e=> <><Bubbles/><PreviousPost text={e}/></>)}
           <Friends/>
         </Col>
       </Row>

@@ -4,7 +4,7 @@ import '../../css/user.css';
 import { Row, Col } from 'reactstrap';
 
 import PostArrow from './post-arrow'
-import PostBoxContainer from './PostBox-container'
+import PostBoxContainer from './PostBox_container'
 
 
 class Post extends Component{

@@ -1,28 +1,26 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import '../../css/user.css';
-import { Container, Row, Col, Form, Input } from 'reactstrap';
+import { Col, Form } from 'reactstrap';
 
 import { WallLabel, BaloonTextArea, BaloonSubmitButton } from './post-interior'
 
 
 
-class PostBox extends Component{
-  constructor(props){
+class PostBox extends Component {
+  constructor(props) {
     super(props)
     this.state = {value: ''}
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
   }
 
-  handleChange(event){
+  handleChange(event) {
     this.setState({value: event.target.value})
   }
 
-  handleSubmit(event){
+  handleSubmit(event) {
     event.preventDefault()
-    console.log('this.state.value');
-    console.log(this.state.value);
     this.props.add_post(this.state.value)
   }
 

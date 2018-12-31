@@ -1,21 +1,22 @@
-import React, { Component } from 'react';
+import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import '../css/user.css';
-import { Row, Col } from 'reactstrap';
+import { Col } from 'reactstrap';
 
 
-function ProfilePicture(){
+function ProfilePicture({imagem}){
+  imagem = String(imagem)
   return(
     <div id="profilePicture">
-      <div className="blocos" id="photoPerfil"></div>
+      <div className="blocos" id="photoPerfil" style={{backgroundImage: 'url(../images/user_images/9fa9cf08356e5ba1b8495f5fa6188479ce41.bmp)'}}></div>
     </div>
   )
 }
 
-function ProfileName({username}) {
+function ProfileName({nome}) {
   return (
     <div>
-      <p id="profileName" >{username}</p>
+      <p id="profileName" >{nome}</p>
       <div className="lineSeparator"></div>
     </div>
   )
@@ -30,8 +31,8 @@ function OnlineStatus(){
 function Profile({profile}){
     return (
       <Col md={{size: 2}}>
-        <ProfilePicture />
-        <ProfileName username={profile.username} />
+        <ProfilePicture imagem={profile.imagem}/>
+        <ProfileName nome={profile.nome} />
         <OnlineStatus/>
       </Col>
     )
