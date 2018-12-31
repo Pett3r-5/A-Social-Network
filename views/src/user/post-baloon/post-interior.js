@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import '../../css/user.css';
-import { Row, Col, Input } from 'reactstrap';
+import { Row, Col, Input, Button } from 'reactstrap';
 
 
 function WallLabel(){
@@ -40,7 +40,7 @@ function BaloonSubmitButton({handleSubmit}) {
   return (
     <Row>
       <Col md={{size:2, offset: 10}}>
-        <Input type="submit" value="Post" id="botaoPost" className="btn-block" onSubmit={handleSubmit} />
+        <Button type="button" value="Post" id="botaoPost" className="btn-block" onClick={handleSubmit} >Post</Button>
       </Col>
     </Row>
   )

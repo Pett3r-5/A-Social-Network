@@ -8,7 +8,7 @@ import User from './user/user'
 class App extends Component {
   constructor(props){
     super(props)
-    this.state = {pg: true}
+    this.state = {pg: false}
   }
 
   render() {

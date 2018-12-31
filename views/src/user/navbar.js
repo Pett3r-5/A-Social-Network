@@ -8,7 +8,7 @@ import NavBar from './navbar.js'
 class Search extends Component {
     render(){
       return (
-        <Form inline  className="pull-right">
+        <Form inline className="pull-right">
           <Input type="search" id="searching" placeholder="Search" style={{position: 'relative', display: 'inline-block'}} />
           <Button id="procura" type="submit" id="procura">Search</Button>
         </Form>
