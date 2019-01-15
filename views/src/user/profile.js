@@ -4,11 +4,12 @@ import '../css/user.css';
 import { Col } from 'reactstrap';
 
 
+
 function ProfilePicture({imagem}){
   imagem = String(imagem)
   return(
     <div id="profilePicture">
-      <div className="blocos" id="photoPerfil" style={{backgroundImage: 'url(../images/user_images/9fa9cf08356e5ba1b8495f5fa6188479ce41.bmp)'}}></div>
+      <div className="blocos" id="photoPerfil" style={{backgroundImage: `url(${imagem})`}}></div>
     </div>
   )
 }

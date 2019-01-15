@@ -9,22 +9,21 @@ import Bubbles from './post-baloon/Bubbles'
 import PreviousPost from './post-baloon/Previous-post'
 import Friends from './Friends'
 
-class UserBody extends Component {
-
-  render() {
-    return (
-      <Row style={{paddingTop: '13%', width: '100%'}}>
-        <Col md={{size: 8, offset: 2}} sm={{size:10, offset:1}} id="rowBase">
-          <Row>
-            <ProfileContainer />
-            <Post />
-          </Row>
-          {this.props.posts.map(e=> <><Bubbles/><PreviousPost text={e}/></>)}
-          <Friends/>
-        </Col>
-      </Row>
-    )
-  }
+function UserBody(props) {
+  return (
+    <Row style={{paddingTop: '13%', width: '100%'}}>
+      <Col md={{size: 8, offset: 2}} sm={{size:10, offset:1}} id="rowBase">
+        <Row>
+          <ProfileContainer />
+          <Post />
+        </Row>
+        {props.data.posts.map(e=> <><Bubbles/><PreviousPost text={e}/></>)}
+        <Row style={{paddingTop: 150}}>
+          <Friends friends={props.data.friends}/>
+        </Row>
+      </Col>
+    </Row>
+  )
 }
 
 
