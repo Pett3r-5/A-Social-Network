@@ -4,11 +4,13 @@ import '../css/user.css';
 import { Col, Container, Button, Row } from 'reactstrap';
 
 function EachFriend({e}) {
+  let imagem = require('../images/user_images/'+ e.imagem)
+  
   return(
     <Col xs={{size:2}} md={{size:1}} className="pull-left" style={{paddingLeft:50, paddingRight:50, paddingBottom:30, paddingTop:30}}>
       <div className="friendBola">
         <a style={{color: 'gray', textDecoration: 'none', href:`${e.imagem}`}}>
-          <Button className='friendIconList' style={{backgroundImage: `url(${e.imagem})`}}>
+          <Button className='friendIconList' style={{backgroundImage: `url(${imagem})`}}>
           </Button>
           <p style={{textAlign: 'center', marginTop: '10%'}}>{e.nome}</p>
         </a>

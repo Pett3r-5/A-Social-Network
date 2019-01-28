@@ -3,16 +3,10 @@ import 'bootstrap/dist/css/bootstrap.css';
 import '../css/user.css';
 import { Col } from 'reactstrap';
 
+import ProfilePictureContainer from './ProfilePicture_container'
 
 
-function ProfilePicture({imagem}){
-  imagem = String(imagem)
-  return(
-    <div id="profilePicture">
-      <div className="blocos" id="photoPerfil" style={{backgroundImage: `url(${imagem})`}}></div>
-    </div>
-  )
-}
+
 
 function ProfileName({nome}) {
   return (
@@ -32,7 +26,7 @@ function OnlineStatus(){
 function Profile({profile}){
     return (
       <Col md={{size: 2}}>
-        <ProfilePicture imagem={profile.imagem}/>
+        <ProfilePictureContainer type={'photoPerfil'}/>
         <ProfileName nome={profile.nome} />
         <OnlineStatus/>
       </Col>

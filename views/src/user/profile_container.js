@@ -3,8 +3,7 @@ import Profile from './profile'
 
 const mapStateToProps = (state) => ({
   profile: {
-    nome: state.loggedin.nome,
-    imagem: require(`../images/user_images/${state.loggedin.imagem}`)
+    nome: state.loggedin.nome
   }
 })
 
