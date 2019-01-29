@@ -40,24 +40,9 @@ class FormLogin extends Component {
 
   handleSubmit(event){
     event.preventDefault()
-    fetch('http://localhost:3001',
-    {
-      method: 'POST',
-      headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'},
-      body: JSON.stringify({username: this.state.username.value, password: this.state.password.value})
-    }).then(res=> res.json()).then((result)=> {
-      console.log('aqui');
-      console.log(result)
-      if(result) {
-        this.setState({authorized: true})
-        this.props.populate_user(result)
-        this.props.history.push(`/user/${result._id}`)
-      }
-    }).catch((error)=> {
-      this.props.history.push(`/unauthorized`)
-    })
+    this.props.http_request_get_user(this.state)
+    this.setState({authorized: true})
+    this.props.history.push(`/user/${this.props._id}`)
   }
 
   render(){
@@ -73,3 +58,30 @@ class FormLogin extends Component {
 }
 
 export default withRouter(FormLogin)
+
+
+
+
+
+
+// handleSubmit(event){
+//   event.preventDefault()
+//   fetch('http://localhost:3001',
+//   {
+//     method: 'POST',
+//     headers: {
+//     'Accept': 'application/json',
+//     'Content-Type': 'application/json'},
+//     body: JSON.stringify({username: this.state.username.value, password: this.state.password.value})
+//   }).then(res=> res.json()).then((result)=> {
+//     console.log('aqui');
+//     console.log(result)
+//     if(result) {
+//       this.setState({authorized: true})
+//       this.props.populate_user(result)
+//       this.props.history.push(`/user/${result._id}`)
+//     }
+//   }).catch((error)=> {
+//     this.props.history.push(`/unauthorized`)
+//   })
+// }

@@ -10,9 +10,10 @@ const init = {
 //daí se algum dado for atualizado, ele tem que ser pegado de novo
 
 const loggedInReducer = (state=init, action) => {
-
+  console.log('loggedInReducer')
+  console.log(state)
   if(action.type === 'POPULATE_LOGGED_USER'){
-      return action.content
+      return action.content //ta inserindo todo o usuario que acabou de logar, por isso o estado todo é apenas o conteúdo dessa action
   }
 
   if(action.type === 'NEW_POST') {
