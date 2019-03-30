@@ -4,7 +4,7 @@ import { BrowserRouter, Route } from 'react-router-dom'
 import './css/App.css';
 
 import LoginBox from './index/login/LoginBox'
-import User from './user/user'
+import UserContainer from './user/user_container'
 
 
 
@@ -16,7 +16,7 @@ class App extends Component {
         <BrowserRouter>
           <div>
             <Route exact path="/" component={LoginBox} />
-            <Route exact path="/user/:id" component={User} />
+            <Route exact path="/user/:id" component={UserContainer} />
           </div>
         </BrowserRouter>
       </div>

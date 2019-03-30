@@ -1,3 +1,5 @@
+import populate_user from './populate_user'
+
 
 const http_request_get_user = (user) => {
   return (dispatch, getState) => {
@@ -7,9 +9,9 @@ const http_request_get_user = (user) => {
       headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'},
-      body: JSON.stringify({username: user.username.value, password: user.password.value})
+      body: JSON.stringify({_id: user._id})
     }).then(res=> res.json()).then((result)=>{
-      dispatch({type:"POPULATE_LOGGED_USER", content: result})
+      dispatch(populate_user(result))
     }).catch(error=>console.log(error))
   }
 }

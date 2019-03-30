@@ -12,6 +12,7 @@ const init = {
 const loggedInReducer = (state=init, action) => {
   console.log('loggedInReducer')
   console.log(state)
+  console.log(action)
   if(action.type === 'POPULATE_LOGGED_USER'){
       return action.content //ta inserindo todo o usuario que acabou de logar, por isso o estado todo é apenas o conteúdo dessa action
   }
@@ -22,6 +23,14 @@ const loggedInReducer = (state=init, action) => {
             posts: [ action.content, ...state.posts ] //apenas posts eh alterado
            }
   }
+
+  if(action.type === 'DEFINE_AUTH') {
+    return {
+      ...state,
+      auth: action.content
+    }
+  }
+
   if(action.type === 'GET_LOGGED_USER') {
     return state
   }

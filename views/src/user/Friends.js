@@ -2,10 +2,11 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import '../css/user.css';
 import { Col, Container, Button, Row } from 'reactstrap';
+import { BrowserRouter, Route } from 'react-router-dom'
 
 function EachFriend({e}) {
   let imagem = require('../images/user_images/'+ e.imagem)
-  
+
   return(
     <Col xs={{size:2}} md={{size:1}} className="pull-left" style={{paddingLeft:50, paddingRight:50, paddingBottom:30, paddingTop:30}}>
       <div className="friendBola">
@@ -35,7 +36,6 @@ function FriendsList({friends}){
         <Row>
           {friends.map(e=><EachFriend e={e}/>)}
         </Row>
-
       </Col>
   )
 }

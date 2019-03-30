@@ -40,8 +40,7 @@ class FormLogin extends Component {
 
   handleSubmit(event){
     event.preventDefault()
-    this.props.http_request_get_user(this.state)
-    this.setState({authorized: true})
+    this.props.http_request_get_self(this.state)
     this.props.history.push(`/user/${this.props._id}`)
   }
 

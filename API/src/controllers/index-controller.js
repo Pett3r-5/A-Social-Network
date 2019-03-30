@@ -7,6 +7,33 @@ exports.get = (req, res) => {
   res.status(200).sendFile(path.join(__dirname, '../views/index.html'))
 }
 
+
+let amigosPendentesLoop = (user, amigosPendentes, i , callback)=> { //not blocking the event loop: recursion for big o of n iterations
+  if(!user || !amigos) return callback('amigosPendentesLoop: user or amigos undefined')
+
+  user.amigosPendentes[i] = { _id: amigosPendentes[i]._id, nome: amigosPendentes[i].nome, imagem: amigosPendentes[i].imagem }
+
+  if (i === amigosPendentes.length - 1) {
+    return callback()
+  }
+  setImmediate(amigosPendentesLoop.bind(null, user, amigosPendentes, i+1, callback))
+}
+
+
+let amigosLoop = (user, amigos, i, callback)=> { //not blocking the event loop: recursion for big o of n iterations
+  if(!user || !amigos) return callback('amigosLoop: User or amigos undefined')
+
+  user.amigos[i] = { _id: amigos[i]._id, nome: amigos[i].nome, imagem: amigos[i].imagem }
+
+  if (i === amigos.length - 1) {
+    return callback()
+  }
+  setImmediate(amigosLoop.bind(null, user, amigos, i+1, callback))
+}
+
+
+
+
 exports.postIndex = async (req, res) => {
   // let usuario = req.params.id.substring(req.params.id.indexOf(':') + 1, req.params.id.length)
   let usuario = req.body.username
@@ -15,46 +42,42 @@ exports.postIndex = async (req, res) => {
   let amigosPendentes
   try {
     user = await User.findOne({nome: usuario}).lean()
-    if (user !== null) {
-      amigos = await User.find({ amigos_id: {'$in': [user._id]} , _id: { '$in': user.amigos_id } }).lean()
-      user.amigos = []
-      if (amigos.length > 0) {
-        for (let i = 0; i < amigos.length; i++) {
-          user.amigos[i] = { _id: amigos[i]._id, nome: amigos[i].nome, imagem: amigos[i].imagem }
-        }
-      }
-      user.usuarioLogado = req.user
-      if (String(req.user._id) === String(user._id)) {
-        amigosPendentes = await User.find({ $and: [ { amigos_id: {'$in': [user._id]} }, { _id: { '$not': { '$in': user.amigos_id } } } ] }).lean()
-        // console.log('self')
-        user.amigosPendentes = []
-        if (amigosPendentes.length > 0) {
-          for (let i = 0; i < amigosPendentes.length; i++) {
-            user.amigosPendentes[i] = { _id: amigosPendentes[i]._id, nome: amigosPendentes[i].nome, imagem: amigosPendentes[i].imagem }
-          }
-        }
-        // user = JSON.stringify(user)
-        // user = encodeURI(user)
-        // return res.status(200).render(path.join(__dirname, '../views/home.hbs'), { 'usuario': user })
-        return res.status(200).send(user)
-      } else {
-        // console.log('not-self')
-        // if (String(req.user.amigos_id).indexOf(String(user._id)) === -1 && String(user.amigos_id).indexOf(String(req.user._id)) === -1) {
-        //   user.adicionar = '<form id="postFriend" method="post" style="margin: auto"><button type="submit" form="postFriend" class="btn" id="botaoImagem" style="height: 50px; width:200px; background-color: rgb(250,200,200) !important;">Adicionar contato</button></form>'
-        // }
-        // user = JSON.stringify(user)
-        // user = encodeURI(user)
-        // return res.status(200).render(path.join(__dirname, '../views/user.hbs'), { 'usuario': user })
-        return res.status(200).send(user)
-      }
-    } else {
-      res.status(500).send('nenhum registro de usuário encontrado')
-    }
   } catch(error) {
     console.log(error);
     return res.status(500).send(error)
   }
-  // res.redirect(__dirname + `/users/user:${req.user.nome}`) // esse user.id tá vindo do done(null, user) do localStrategy
+  if (!user) {
+    res.status(500).send('nenhum registro de usuário encontrado')
+  }
+  amigos = await User.find({ amigos_id: {'$in': [user._id]} , _id: { '$in': user.amigos_id } }).lean()
+  user.amigos = []
+
+  amigosLoop(user, amigos, 0, async (err)=>{
+    if(err) console.log(err)
+
+    user.usuarioLogado = req.user
+
+    if (String(req.user._id) !== String(user._id)) {
+      return res.status(200).send(user)
+    }
+
+    try {
+      amigosPendentes = await User.find({ $and: [ { amigos_id: {'$in': [user._id]} }, { _id: { '$not': { '$in': user.amigos_id } } } ] }).lean()
+    } catch(error) {
+      console.log(error);
+      return res.status(500).send(error)
+    }
+
+    user.amigosPendentes = []
+
+    amigosPendentesLoop(user, amigosPendentes, 0, (err)=>{
+      if(err){
+        console.log(err)
+      }
+
+      return res.status(200).send(user)
+    })
+  })
 }
 
 exports.postHome = async (req, res) => {
