@@ -41,7 +41,17 @@ class FormLogin extends Component {
   handleSubmit(event){
     event.preventDefault()
     this.props.http_request_get_self(this.state)
-    this.props.history.push(`/user/${this.props._id}`)
+    .then(()=>{
+      console.log('success')
+      this.props.define_auth(true)
+      console.log(this.props._id)
+      this.props.history.push(`/user/${this.props._id}`)
+    }).catch(error=>{
+      this.props.define_auth(false)
+      console.log(error)
+      this.props.history.push(`/user/unauthorized`)
+    })
+
   }
 
   render(){

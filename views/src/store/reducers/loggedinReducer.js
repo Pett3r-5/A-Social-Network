@@ -1,20 +1,27 @@
 
 //user that is currently logged in(browsing the page):
 const init = {
-    username: 'Petter',
-    image: './images/user_images/ddddd.jpe',
-    friends: [],
+    nome: 'Petter',
+    imagem: './images/user_images/ddddd.jpe',
+    amigos: [],
     posts: []
 }
 //o getUser, pegar os dados do user logado, tem que ser feito no init, nao?
 //daí se algum dado for atualizado, ele tem que ser pegado de novo
 
 const loggedInReducer = (state=init, action) => {
-  console.log('loggedInReducer')
-  console.log(state)
-  console.log(action)
+
   if(action.type === 'POPULATE_LOGGED_USER'){
-      return action.content //ta inserindo todo o usuario que acabou de logar, por isso o estado todo é apenas o conteúdo dessa action
+      return {
+        ...state,
+        _id: action.content._id,
+        nome: action.content.nome,
+        imagem:  action.content.imagem,
+        email:  action.content.email,
+        posts:  action.content.posts,
+        amigos:  action.content.amigos,
+        amigosPendentes:  action.content.amigosPendentes
+      }
   }
 
   if(action.type === 'NEW_POST') {
@@ -29,6 +36,17 @@ const loggedInReducer = (state=init, action) => {
       ...state,
       auth: action.content
     }
+  }
+
+  if(action.type === 'SET_TOKEN') {
+    return {
+      ...state,
+      token: action.content
+    }
+  }
+
+  if(action.type === 'GET_TOKEN') {
+    return state.token
   }
 
   if(action.type === 'GET_LOGGED_USER') {

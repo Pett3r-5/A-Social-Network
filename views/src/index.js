@@ -21,6 +21,7 @@ const persistConfig = {
   storage
 }
 
+
 const persistedReucer = persistReducer(persistConfig, rootReducer)
 
 

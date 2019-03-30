@@ -2,3 +2,4 @@ passport.js
 express-routes.js
 API/node_modules
 view/node_modules
+API/.env

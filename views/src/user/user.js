@@ -8,14 +8,13 @@ import UserBodyContainer from './UserBody_container'
 
 class User extends Component {
   componentDidMount() {
-    console.log('this.props.authenticated')
-    console.log(this.props.authenticated)
     if(!this.props.authenticated) {
       this.props.history.push(`/unauthorized`)
     }
-    // if(this.props.match.params._id !== this.props.loggedIn._id){
-      // this.props.http_request_get_user(this.props.match.params._id)
+    // if(!this.props.user._id || this.props.loggedin._id !== this.props.user._id) {
+    //   this.props.http_request_get_user(this.props.match.params._id)
     // }
+    // this.props.http_request_get_self(this.state).resolve()
   }
 
   render(){

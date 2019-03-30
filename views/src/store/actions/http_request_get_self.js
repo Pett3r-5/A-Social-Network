@@ -1,10 +1,13 @@
 import populate_user from './populate_user'
-import define_auth from './define_auth'
+import populate_other_user from './populate_other_user'
+import set_token from './set_token'
 
 
 const http_request_get_self = (user) => {
-  return (dispatch, getState) => {
-    fetch('http://localhost:3001',
+
+
+  return (dispatch) => {
+    return fetch('http://localhost:3001',
     {
       method: 'POST',
       headers: {
@@ -12,11 +15,11 @@ const http_request_get_self = (user) => {
       'Content-Type': 'application/json'},
       body: JSON.stringify({username: user.username.value, password: user.password.value})
     }).then(res=> res.json()).then((result)=>{
-      dispatch(populate_user(result))
-      dispatch(define_auth(true))
+      dispatch(populate_user(result.user))
+      dispatch(populate_other_user(result.user))
+      dispatch(set_token(result.token))
     }).catch(error=>{
-      dispatch(define_auth(false))
-      console.log(error)
+      throw error
     })
   }
 }

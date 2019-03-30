@@ -3,18 +3,21 @@ import 'bootstrap/dist/css/bootstrap.css';
 import '../css/user.css';
 import { Col, Container, Button, Row } from 'reactstrap';
 import { BrowserRouter, Route } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 function EachFriend({e}) {
   let imagem = require('../images/user_images/'+ e.imagem)
 
+
+
   return(
     <Col xs={{size:2}} md={{size:1}} className="pull-left" style={{paddingLeft:50, paddingRight:50, paddingBottom:30, paddingTop:30}}>
       <div className="friendBola">
-        <a style={{color: 'gray', textDecoration: 'none', href:`${e.imagem}`}}>
+        <Link to={`/users/${e._id}`} style={{color: 'gray', textDecoration: 'none'}}>
           <Button className='friendIconList' style={{backgroundImage: `url(${imagem})`}}>
           </Button>
           <p style={{textAlign: 'center', marginTop: '10%'}}>{e.nome}</p>
-        </a>
+        </Link>
       </div>
     </Col>
   )
@@ -22,6 +25,10 @@ function EachFriend({e}) {
 
 function FriendsList({friends}){
     let url = ''
+
+    // accessUserPage(){
+    //   fetch()
+    // }
     // friends = []
     // for (var i = 0; i < 42; i++) {
     //   friends.push({nome: 'ta', imagem: 'sim'})

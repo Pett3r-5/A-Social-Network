@@ -12,7 +12,8 @@ let storage = fileUpload.storage
 upload = multer({ storage })
 
 router.get('/', indexController.get);
-router.post('/', passport.authenticate('local', { failureRedirect: '/nada', failureFlash: true }) ,indexController.postIndex);
+// router.post('/', passport.authenticate('local', { failureRedirect: '/nada', failureFlash: true }) ,indexController.postIndex);
+router.post('/', auth.inicialLogadoOuNao , indexController.postIndex);
 router.post('/home', upload.single('fileToUpload'), indexController.postHome);
 router.post('/config:id', auth.logadoOuNao, indexController.config);
 

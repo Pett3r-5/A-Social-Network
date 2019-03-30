@@ -22,9 +22,9 @@ const postRoutes = require('./routes/post-routes')
 const actionRoutes = require('./routes/action-routes')
 
 app.set('view engine', 'html')
-app.engine('html', hbs.__express)
-app.set('view engine', 'handlebars')
-app.engine('handlebars', exphbs({defaultLayout: 'main'}))
+// app.engine('html', hbs.__express)
+// app.set('view engine', 'handlebars')
+// app.engine('handlebars', exphbs({defaultLayout: 'main'}))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static(__dirname))
@@ -51,59 +51,59 @@ const User = require('./models/user')
 //   app.use(session({ secret: salt, resave: true, saveUninitialized: true })) // If your application uses persistent login sessions, passport.session() middleware must also be used.
 // })
 let salt = bcrypt.genSaltSync(10)
-app.use(session({
-  secret: salt,
-  resave: true,
-  saveUninitialized: true,
-  cookie: {
-    httpOnly: true,
-    SameSite: 'strict',
-    secure: true
-  }
-}))
+// app.use(session({
+//   secret: salt,
+//   resave: true,
+//   saveUninitialized: true,
+//   cookie: {
+//     httpOnly: true,
+//     SameSite: 'strict',
+//     secure: true
+//   }
+// }))
+//
+// app.use(passport.initialize())
+// app.use(passport.session())
+// app.use(flash()) // flash eh a mensagem padrao de erro ou sucesso de login do passport
 
-app.use(passport.initialize())
-app.use(passport.session())
-app.use(flash()) // flash eh a mensagem padrao de erro ou sucesso de login do passport
-
-passport.use(new LocalStrategy( // o filtro de buscar o usuario no banco de dados.
-function (username, password, done) {
-    console.log(username);
-    User.findOne({nome: username}).then((docs) => {
-      if (docs === null) {
-        console.log('usuario nao achado: ' + err)
-        return done(null, false)
-      } else {
-        bcrypt.compare(password, docs.password, (err, resul) => {
-          if (err) {
-            console.log(err)
-          }
-          if (resul === false) {
-            return done(null, false)
-          } else {
-            console.log('entrou');
-            let user = docs
-            return done(null, user)
-          }
-        })
-      }
-    }, (err) => {
-      console.log('usuario nao achado: ' + err)
-      return done(null, false)
-    })
-  })
-)
-
-passport.serializeUser(function (user, done) {
-  done(null, user._id)
-})
-
-passport.deserializeUser(function (id, done) {
-  User.findOne({_id: new ObjectID(id)}).then((docs) => {
-    let user = docs
-    done(err, user)
-  }).catch((err) => console.log(err))
-})
+// passport.use(new LocalStrategy( // o filtro de buscar o usuario no banco de dados.
+// function (username, password, done) {
+//     console.log(username);
+//     User.findOne({nome: username}).then((docs) => {
+//       if (docs === null) {
+//         console.log('usuario nao achado: ' + err)
+//         return done(null, false)
+//       } else {
+//         bcrypt.compare(password, docs.password, (err, resul) => {
+//           if (err) {
+//             console.log(err)
+//           }
+//           if (resul === false) {
+//             return done(null, false)
+//           } else {
+//             console.log('entrou');
+//             let user = docs
+//             return done(null, user)
+//           }
+//         })
+//       }
+//     }, (err) => {
+//       console.log('usuario nao achado: ' + err)
+//       return done(null, false)
+//     })
+//   })
+// )
+//
+// passport.serializeUser(function (user, done) {
+//   done(null, user._id)
+// })
+//
+// passport.deserializeUser(function (id, done) {
+//   User.findOne({_id: new ObjectID(id)}).then((docs) => {
+//     let user = docs
+//     done(err, user)
+//   }).catch((err) => console.log(err))
+// })
 
 app.use('/', indexRoutes)
 app.use('/users/', userRoutes)
