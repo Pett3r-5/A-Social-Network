@@ -32,7 +32,7 @@
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
     "pm2": "^3.4.0",
-    "validator": "^10.5.0"
+    "validator": "^13.7.0"
   },
   "license": "ISC",
   "bugs": {
